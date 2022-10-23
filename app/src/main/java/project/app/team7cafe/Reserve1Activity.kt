@@ -1,5 +1,6 @@
 package project.app.team7cafe
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -126,6 +127,12 @@ class Reserve1Activity : AppCompatActivity() {
             }
         }
 
+        val backBtn = findViewById<Button>(R.id.button_back)
+
+        backBtn.setOnClickListener{
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+        }
 
 
     }
