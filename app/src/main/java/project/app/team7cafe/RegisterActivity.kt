@@ -66,41 +66,39 @@ class RegisterActivity : AppCompatActivity() {
         val passwordInput = password.text.toString()
 
         val timestamp = System.currentTimeMillis()
-        val uid = auth.uid
-        var user= uid?.let { User(uid = it, name= nameInput, phone= phoneInput, email=emailInput, password= passwordInput, profileImage="", userType="user", timestamp=timestamp) }
-
-        var hashMap: HashMap<String, Any?> = HashMap()
-        hashMap["uid"]= uid
-        hashMap["name"]=nameInput
-        hashMap["phone"]=phoneInput
-        hashMap["email"]= emailInput
-        hashMap["password"]=passwordInput
-        hashMap["profileImage"]=""
-        hashMap["userType"]="user"
-        hashMap["timestamp"]=timestamp
-        hashMap["order_number"]=0
-
-
-        val users = database.getReference("User")
-
-        users.child(uid!!).setValue(hashMap).addOnSuccessListener {
-            Toast.makeText(baseContext, "Saved successfully",
-                Toast.LENGTH_SHORT).show()
-
-        }.addOnFailureListener(){
-            Toast.makeText(baseContext, "Failed in saving",
-                Toast.LENGTH_SHORT).show()
-        }
-
         auth.createUserWithEmailAndPassword(emailInput, passwordInput)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    var hashMap: HashMap<String, Any?> = HashMap()
+                    hashMap["uid"]= auth.currentUser?.uid
+                    hashMap["name"]=nameInput
+                    hashMap["phone"]=phoneInput
+                    hashMap["email"]= emailInput
+                    hashMap["password"]=passwordInput
+                    hashMap["profileImage"]=""
+                    hashMap["userType"]="user"
+                    hashMap["timestamp"]=timestamp
+                    hashMap["order_number"]=0
+
+
+                    val users = database.getReference("User")
+
+                    users.child(auth.currentUser?.uid!!).setValue(hashMap).addOnSuccessListener {
+                        Toast.makeText(baseContext, "Saved successfully",
+                            Toast.LENGTH_SHORT).show()
+
+                    }.addOnFailureListener(){
+                        Toast.makeText(baseContext, "Failed in saving",
+                            Toast.LENGTH_SHORT).show()
+                    }
+
+                    Toast.makeText(baseContext, "Authentication successfully.",
+                        Toast.LENGTH_SHORT).show()
+
                     // Sign in success, go to HomeActivity
                     val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
 
-                    Toast.makeText(baseContext, "Authentication successfully.",
-                        Toast.LENGTH_SHORT).show()
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed.",
@@ -111,6 +109,9 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error occurred ${it.localizedMessage}",
                     Toast.LENGTH_SHORT).show()
             }
+
+
+
     }
 
 

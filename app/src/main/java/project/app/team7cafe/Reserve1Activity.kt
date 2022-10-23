@@ -42,6 +42,7 @@ class Reserve1Activity : AppCompatActivity() {
                 val green = findViewById<Button>(R.id.button_table_1_selected)
                 val grey = findViewById<Button>(R.id.button_table_1_yes)
 
+
                 if (is_reserved){
                     green.visibility = View.GONE
                     grey.visibility = View.VISIBLE
@@ -63,6 +64,7 @@ class Reserve1Activity : AppCompatActivity() {
                         green3.visibility = View.GONE
                         green4.visibility = View.GONE
                         green.visibility = View.VISIBLE
+                        green.text = seats_number
                         final_table_id="1"
                         nextPage()
                     }
@@ -101,6 +103,7 @@ class Reserve1Activity : AppCompatActivity() {
                         green3.visibility = View.GONE
                         green4.visibility = View.GONE
                         green.visibility = View.VISIBLE
+                        green.text = seats_number
                         final_table_id="2"
                         nextPage()
                     }
@@ -139,6 +142,7 @@ class Reserve1Activity : AppCompatActivity() {
                         green3.visibility = View.GONE
                         green4.visibility = View.GONE
                         green.visibility = View.VISIBLE
+                        green.text = seats_number
                         final_table_id="3"
                         nextPage()
                     }
@@ -177,6 +181,7 @@ class Reserve1Activity : AppCompatActivity() {
                         green3.visibility = View.GONE
                         green4.visibility = View.GONE
                         green.visibility = View.VISIBLE
+                        green.text = seats_number
                         final_table_id="4"
                         nextPage()
                     }
@@ -202,26 +207,41 @@ class Reserve1Activity : AppCompatActivity() {
 
         var tables = database.getReference("Table")
 
+        var order_num = 1005
         users.child(auth.currentUser?.uid!!).get().addOnSuccessListener {
             if (it.exists()) {
-                var order_number= it.child("order_number").value.toString()
-                hashMap["order_id"]= order_number+1
+                Toast.makeText(baseContext, "here",
+                    Toast.LENGTH_SHORT).show()
+                var order_number= it.child("order_number").value.toString().toInt()
+                order_num = order_number
+                Toast.makeText(baseContext, order_num.toString(),
+                    Toast.LENGTH_SHORT).show()
+                hashMap["order_id"]= (order_num+1).toString()
             }
+        }.addOnFailureListener{
+            Toast.makeText(baseContext, "order number failed",
+                Toast.LENGTH_SHORT).show()
         }
 
-        users.child(auth.currentUser?.uid!!).child("Order").child(hashMap["order_id"] as String)
-            .setValue(hashMap)
-            .addOnSuccessListener {
-                val intent = Intent(this, Reserve2Activity::class.java)
-                startActivity(intent)
 
-                Toast.makeText(baseContext, "table with id "+ final_table_id +" was saved successfully",
-                    Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener{
-                Toast.makeText(baseContext, "table is not selected",
-                    Toast.LENGTH_SHORT).show()
-            }
+        nextBtn.setOnClickListener{
+            val intent = Intent(this, Reserve2Activity::class.java)
+            startActivity(intent)
+
+            users.child(auth.currentUser?.uid!!).child("Order").child(hashMap["order_id"].toString())
+                .setValue(hashMap)
+                .addOnSuccessListener {
+
+                    Toast.makeText(baseContext, "table with id "+ final_table_id +" was saved successfully"+hashMap["order_id"].toString(),
+                        Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener{
+                    Toast.makeText(baseContext, "table is not selected",
+                        Toast.LENGTH_SHORT).show()
+                }
+
+        }
+
 
 
 
