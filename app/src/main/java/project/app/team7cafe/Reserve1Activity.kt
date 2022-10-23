@@ -232,6 +232,7 @@ class Reserve1Activity : AppCompatActivity() {
                 .setValue(hashMap)
                 .addOnSuccessListener {
 
+
                     Toast.makeText(baseContext, "table with id "+ final_table_id +" was saved successfully"+hashMap["order_id"].toString(),
                         Toast.LENGTH_SHORT).show()
                 }
@@ -240,10 +241,9 @@ class Reserve1Activity : AppCompatActivity() {
                         Toast.LENGTH_SHORT).show()
                 }
 
+            users.child(auth.currentUser?.uid!!).child("order_number").setValue(hashMap["order_id"].toString())
+            tables.child(final_table_id).child("is_reserved").setValue(true)
         }
-
-
-
 
 
     }
