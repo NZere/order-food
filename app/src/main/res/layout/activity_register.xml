@@ -52,16 +52,33 @@
         android:layout_height="50dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/edittext_ui"
-        android:drawableStart="@drawable/icon_email_ui"
+        android:drawableStart="@drawable/icon_person_ui"
         android:drawablePadding="10dp"
         android:ems="10"
-        android:hint="Email"
+        android:hint="Name"
         android:inputType="textPersonName"
         android:textColorHint="#737373"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_register" />
+
+    <EditText
+        android:id="@+id/input_phone"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittext_ui"
+        android:drawableStart="@drawable/icon_phone_ui"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="Phone"
+        android:inputType="textPersonName"
+        android:textColorHint="#737373"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_name" />
 
     <EditText
         android:id="@+id/input_email"
@@ -76,9 +93,9 @@
         android:inputType="textPersonName"
         android:textColorHint="#737373"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_name" />
+        app:layout_constraintTop_toBottomOf="@+id/input_phone" />
 
     <EditText
         android:id="@+id/input_password"
@@ -101,7 +118,7 @@
         android:id="@+id/button_register"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         app:backgroundTint="@null"
         android:background="@drawable/go_main_button_ui"
         android:text="Register"
@@ -127,10 +144,10 @@
 
     <ImageView
         android:id="@+id/food_register"
-        android:layout_width="366dp"
-        android:layout_height="656dp"
-        android:layout_marginTop="340dp"
-        android:layout_marginEnd="160dp"
+        android:layout_width="295dp"
+        android:layout_height="534dp"
+        android:layout_marginTop="416dp"
+        android:layout_marginEnd="188dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/register_food" />

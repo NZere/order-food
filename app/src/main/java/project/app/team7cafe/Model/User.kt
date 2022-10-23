@@ -3,23 +3,27 @@ package project.app.team7cafe.Model
 import java.sql.Timestamp
 
 public class User{
-    var name: String? = null
-    var phone: String? = null
-    var email: String? = null
-    var password: String? = null
-    var profileImage: String? = null
+    var uid:Any?=""
+    var name: String? = ""
+    var phone: String? = ""
+    var email: String? = ""
+    var password: String? = ""
+    var profileImage: String? = ""
     var userType: String? = "user"
-    var timestramp:String? = null
+    var timestramp:Any? = System.currentTimeMillis()
 
 
     constructor(){}
 
-    constructor(name:String="", phone:String="", email: String, password: String, profileImage:String="", userType:String="user", timestamp: String){
+    constructor(uid:Any,name:String="", phone:String="", email: String, password: String, profileImage:String="", userType:String="user", timestamp: Any){
+        this.uid = uid
         this.name = name
         this.phone=phone
         this.email=email
         this.password=password
         this.profileImage= profileImage
+        this.userType= userType
+        this.timestramp= timestamp
     }
 
 

@@ -51,6 +51,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun performSignUp() {
         val name = findViewById<EditText>(R.id.input_name)
+        val phone = findViewById<EditText>(R.id.input_phone)
         val email = findViewById<EditText>(R.id.input_email)
         val password = findViewById<EditText>(R.id.input_password)
 
@@ -60,28 +61,34 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         val nameInput = name.text.toString()
+        val phoneInput = phone.text.toString()
         val emailInput = email.text.toString()
         val passwordInput = password.text.toString()
 
         val timestamp = System.currentTimeMillis()
         val uid = auth.uid
+        var user= uid?.let { User(uid = it, name= nameInput, phone= phoneInput, email=emailInput, password= passwordInput, profileImage="", userType="user", timestamp=timestamp) }
 
-
+        var hashMap: HashMap<String, Any?> = HashMap()
+        hashMap["uid"]= uid
+        hashMap["name"]=nameInput
+        hashMap["phone"]=phoneInput
+        hashMap["email"]= emailInput
+        hashMap["password"]=passwordInput
+        hashMap["profileImage"]=""
+        hashMap["userType"]="user"
+        hashMap["timestamp"]=timestamp
 
         val users = database.getReference("User")
 
-        users.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
+        users.child(uid!!).setValue(hashMap).addOnSuccessListener {
+            Toast.makeText(baseContext, "Saved successfully",
+                Toast.LENGTH_SHORT).show()
 
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException())
-            }
-        })
+        }.addOnFailureListener(){
+            Toast.makeText(baseContext, "Failed in saving",
+                Toast.LENGTH_SHORT).show()
+        }
 
         auth.createUserWithEmailAndPassword(emailInput, passwordInput)
             .addOnCompleteListener(this) { task ->
