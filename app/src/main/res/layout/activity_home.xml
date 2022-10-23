@@ -18,27 +18,43 @@
         app:srcCompat="@mipmap/logo_white" />
 
     <Button
-        android:id="@+id/button_back"
-        android:layout_width="50dp"
+        android:id="@+id/button_tut"
+        android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="@drawable/icon_before_ui"
+        android:layout_marginTop="10dp"
         app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/go_main_button_ui"
+        android:text="Reserve"
+        android:textAllCaps="false"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.044"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.071"
-        tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
-
-    <TextView
-        android:id="@+id/email_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo_main" />
 
+    <Button
+        android:id="@+id/button_tam"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/go_button_ui"
+        android:text="Take with you"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="#FF6600"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_tut" />
+
+    <ImageView
+        android:id="@+id/food_login"
+        android:layout_width="528dp"
+        android:layout_height="860dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="68dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/login_meal" />
 </androidx.constraintlayout.widget.ConstraintLayout>

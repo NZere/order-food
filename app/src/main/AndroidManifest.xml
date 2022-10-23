@@ -10,6 +10,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Team7cafe">
         <activity
+            android:name=".Reserve2Activity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Reserve1Activity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".HomeActivity"
             android:exported="false">
             <meta-data
