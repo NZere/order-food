@@ -1,5 +1,6 @@
 package project.app.team7cafe
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -211,6 +212,9 @@ class Reserve1Activity : AppCompatActivity() {
         users.child(auth.currentUser?.uid!!).child("Order").child(hashMap["order_id"] as String)
             .setValue(hashMap)
             .addOnSuccessListener {
+                val intent = Intent(this, Reserve2Activity::class.java)
+                startActivity(intent)
+
                 Toast.makeText(baseContext, "table with id "+ final_table_id +" was saved successfully",
                     Toast.LENGTH_SHORT).show()
             }
