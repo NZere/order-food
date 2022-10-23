@@ -78,6 +78,8 @@ class RegisterActivity : AppCompatActivity() {
         hashMap["profileImage"]=""
         hashMap["userType"]="user"
         hashMap["timestamp"]=timestamp
+        hashMap["order_number"]=0
+
 
         val users = database.getReference("User")
 
