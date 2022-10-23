@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -17,6 +18,7 @@ class Reserve1Activity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     val database = FirebaseDatabase.getInstance()
+    var final_table_id ="0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,13 +45,26 @@ class Reserve1Activity : AppCompatActivity() {
                     green.visibility = View.GONE
                     grey.visibility = View.VISIBLE
                     orange.visibility = View.GONE
-
                 }
                 else{
                     green.visibility = View.GONE
                     grey.visibility = View.GONE
                     orange.visibility = View.VISIBLE
                     orange.text = seats_number
+
+                    orange.setOnClickListener{
+                        val green1 = findViewById<Button>(R.id.button_table_1_selected)
+                        val green2 = findViewById<Button>(R.id.button_table_2_selected)
+                        val green3 = findViewById<Button>(R.id.button_table_3_selected)
+                        val green4 = findViewById<Button>(R.id.button_table_4_selected)
+                        green1.visibility = View.GONE
+                        green2.visibility = View.GONE
+                        green3.visibility = View.GONE
+                        green4.visibility = View.GONE
+                        green.visibility = View.VISIBLE
+                        final_table_id="1"
+                        nextPage()
+                    }
                 }
             }
         }
@@ -74,6 +89,20 @@ class Reserve1Activity : AppCompatActivity() {
                     grey.visibility = View.GONE
                     orange.visibility = View.VISIBLE
                     orange.text = seats_number
+
+                    orange.setOnClickListener{
+                        val green1 = findViewById<Button>(R.id.button_table_1_selected)
+                        val green2 = findViewById<Button>(R.id.button_table_2_selected)
+                        val green3 = findViewById<Button>(R.id.button_table_3_selected)
+                        val green4 = findViewById<Button>(R.id.button_table_4_selected)
+                        green1.visibility = View.GONE
+                        green2.visibility = View.GONE
+                        green3.visibility = View.GONE
+                        green4.visibility = View.GONE
+                        green.visibility = View.VISIBLE
+                        final_table_id="2"
+                        nextPage()
+                    }
                 }
             }
         }
@@ -98,6 +127,20 @@ class Reserve1Activity : AppCompatActivity() {
                     grey.visibility = View.GONE
                     orange.visibility = View.VISIBLE
                     orange.text = seats_number
+
+                    orange.setOnClickListener{
+                        val green1 = findViewById<Button>(R.id.button_table_1_selected)
+                        val green2 = findViewById<Button>(R.id.button_table_2_selected)
+                        val green3 = findViewById<Button>(R.id.button_table_3_selected)
+                        val green4 = findViewById<Button>(R.id.button_table_4_selected)
+                        green1.visibility = View.GONE
+                        green2.visibility = View.GONE
+                        green3.visibility = View.GONE
+                        green4.visibility = View.GONE
+                        green.visibility = View.VISIBLE
+                        final_table_id="3"
+                        nextPage()
+                    }
                 }
             }
         }
@@ -122,11 +165,63 @@ class Reserve1Activity : AppCompatActivity() {
                     grey.visibility = View.GONE
                     orange.visibility = View.VISIBLE
                     orange.text = seats_number
+
+                    orange.setOnClickListener{
+                        val green1 = findViewById<Button>(R.id.button_table_1_selected)
+                        val green2 = findViewById<Button>(R.id.button_table_2_selected)
+                        val green3 = findViewById<Button>(R.id.button_table_3_selected)
+                        val green4 = findViewById<Button>(R.id.button_table_4_selected)
+                        green1.visibility = View.GONE
+                        green2.visibility = View.GONE
+                        green3.visibility = View.GONE
+                        green4.visibility = View.GONE
+                        green.visibility = View.VISIBLE
+                        final_table_id="4"
+                        nextPage()
+                    }
                 }
             }
         }
+    }
+
+    private fun nextPage() {
+        val nextBtn = findViewById<Button>(R.id.button_next)
+        nextBtn.visibility = View.VISIBLE
+
+        val users = database.getReference("User")
+        val timestamp = System.currentTimeMillis()
+
+        var hashMap: HashMap<String, Any?> = HashMap()
+
+        hashMap["user_id"]= auth.currentUser?.uid
+        hashMap["date_start"]= timestamp
+        hashMap["is_ordered"]= false
+        hashMap["ordered_date"]=""
+        hashMap["table_id"]=final_table_id
+
+        var tables = database.getReference("Table")
+
+        users.child(auth.currentUser?.uid!!).get().addOnSuccessListener {
+            if (it.exists()) {
+                var order_number= it.child("order_number").value.toString()
+                hashMap["order_id"]= order_number+1
+            }
+        }
+
+        users.child(auth.currentUser?.uid!!).child("Order").child(hashMap["order_id"] as String)
+            .setValue(hashMap)
+            .addOnSuccessListener {
+                Toast.makeText(baseContext, "table with id "+ final_table_id +" was saved successfully",
+                    Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener{
+                Toast.makeText(baseContext, "table is not selected",
+                    Toast.LENGTH_SHORT).show()
+            }
+
 
 
 
     }
+
 }
