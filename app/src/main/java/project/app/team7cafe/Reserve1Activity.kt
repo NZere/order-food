@@ -226,7 +226,7 @@ class Reserve1Activity : AppCompatActivity() {
 
 
         nextBtn.setOnClickListener{
-            val intent = Intent(this, Reserve2Activity::class.java)
+            val intent = Intent(this, CategoryMenuActivity::class.java)
             startActivity(intent)
 
             users.child(auth.currentUser?.uid!!).child("Order").child(hashMap["order_id"].toString())

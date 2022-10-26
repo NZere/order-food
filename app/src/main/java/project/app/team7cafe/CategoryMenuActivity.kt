@@ -11,12 +11,18 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import project.app.team7cafe.databinding.ActivityCategoryMenuBinding
 
 class CategoryMenuActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityCategoryMenuBinding
+    private lateinit var auth: FirebaseAuth
+
+    val database = FirebaseDatabase.getInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +32,7 @@ class CategoryMenuActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarCategoryMenu.toolbar)
 
+        var categories = database.getReference("Category")
         binding.appBarCategoryMenu.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
