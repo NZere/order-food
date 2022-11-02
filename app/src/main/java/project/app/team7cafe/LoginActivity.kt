@@ -9,11 +9,16 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    val database = FirebaseDatabase.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,11 +62,25 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, navigate to the Home Activity
-                    val intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
+                    //check orders
 
-                    Toast.makeText(baseContext, "Authentication successfully.",
-                        Toast.LENGTH_SHORT).show()
+                    var not_ordered = checkOrders()
+
+                    if (not_ordered){
+                        val intent = Intent(this, CategoryMenuActivity::class.java)
+                        startActivity(intent)
+
+                        Toast.makeText(baseContext, "Authentication successfully.",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        val intent = Intent(this, HomeActivity::class.java)
+                        startActivity(intent)
+
+                        Toast.makeText(baseContext, "Authentication successfully.",
+                            Toast.LENGTH_SHORT).show()
+                    }
+
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed.",
@@ -69,8 +88,41 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(baseContext, "Welcome. ${it.localizedMessage}",
+                Toast.makeText(baseContext, "error",
                     Toast.LENGTH_SHORT).show()
             }
+    }
+
+
+    private fun checkOrders():Boolean{
+        val users = database.getReference("User")
+        var not_ordered=false
+        users.child(auth.currentUser?.uid!!).get().addOnSuccessListener {
+            if (it.exists()) {
+//                Toast.makeText(baseContext, "here",
+//                    Toast.LENGTH_SHORT).show()
+                users.child(auth.currentUser?.uid!!).child("Orders").addValueEventListener(object:
+                    ValueEventListener {
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        // This method is called once with the initial value and again
+                        // whenever data at this location is updated.
+                        for (ds in snapshot.children){
+                            if (ds.child("is_ordered").value == false){
+                                not_ordered=true
+                            }
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
+            }
+        }.addOnFailureListener{
+            Toast.makeText(baseContext, "order number failed",
+                Toast.LENGTH_SHORT).show()
+        }
+
+        return not_ordered
+
     }
 }
