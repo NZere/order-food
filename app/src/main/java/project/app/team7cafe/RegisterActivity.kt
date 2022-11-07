@@ -79,6 +79,7 @@ class RegisterActivity : AppCompatActivity() {
                     hashMap["userType"]="user"
                     hashMap["timestamp"]=timestamp
                     hashMap["order_number"]=0
+                    hashMap["has_unordered"]=false
 
 
                     val users = database.getReference("User")

@@ -241,7 +241,18 @@ class Reserve1Activity : AppCompatActivity() {
                     Toast.makeText(baseContext, "table is not selected",
                         Toast.LENGTH_SHORT).show()
                 }
+            users.child(auth.currentUser?.uid!!).child("has_unordered")
+                .setValue(true)
+                .addOnSuccessListener {
 
+
+                    Toast.makeText(baseContext, "user table is updated",
+                        Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener{
+                    Toast.makeText(baseContext, "user table is not updated",
+                        Toast.LENGTH_SHORT).show()
+                }
             users.child(auth.currentUser?.uid!!).child("order_number").setValue(hashMap["order_id"].toString())
             tables.child(final_table_id).child("is_reserved").setValue(true)
         }
