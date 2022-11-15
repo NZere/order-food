@@ -15,6 +15,8 @@ class MenuViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.O
     init {
         txtMenuName = itemView.findViewById(R.id.menu_name)
         imageView=itemView.findViewById(R.id.menu_image)
+        itemView.setOnClickListener(this)
+
     }
 
     fun setItemClickListener(itemClickListener: ItemClickListener){

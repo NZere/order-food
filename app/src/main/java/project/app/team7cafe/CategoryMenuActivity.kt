@@ -1,9 +1,12 @@
 package project.app.team7cafe
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -13,13 +16,21 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.gms.common.internal.service.Common
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
+import project.app.team7cafe.Interface.ItemClickListener
+import project.app.team7cafe.Model.Category
+import project.app.team7cafe.ViewHolder.MenuViewHolder
 import project.app.team7cafe.databinding.ActivityCategoryMenuBinding
 
-class CategoryMenuActivity : AppCompatActivity() {
+class CategoryMenuActivity(options: FirebaseRecyclerOptions<Category>) : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityCategoryMenuBinding
@@ -28,6 +39,8 @@ class CategoryMenuActivity : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
     lateinit var txtFullName:TextView
     lateinit var recyler_menu: RecyclerView
+    lateinit var layoutManager:LinearLayoutManager
+    lateinit var categories:DatabaseReference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +53,7 @@ class CategoryMenuActivity : AppCompatActivity() {
 
 
         //init firebase
-        var categories = database.getReference("Category")
+        categories = database.getReference("Category")
 
 
         binding.appBarCategoryMenu.fab.setOnClickListener { view ->
@@ -54,23 +67,61 @@ class CategoryMenuActivity : AppCompatActivity() {
 
         //set name of user
         var headerView: View =navView.getHeaderView(0)
-        txtFullName=findViewById(R.id.txtFullName)
+        txtFullName=headerView.findViewById(R.id.txtFullName)
         val users = database.getReference("User")
         users.child(auth.currentUser?.uid!!).get().addOnSuccessListener {
             if (it.exists()) {
                 var name = it.child("name").value.toString()
-                txtFullName.setText(name)
+                txtFullName.text = name
             }
         }
+        recyler_menu= findViewById(R.id.recycler_menu)
+        recyler_menu.setHasFixedSize(true)
+        layoutManager = LinearLayoutManager(this)
+        recyler_menu.layoutManager = layoutManager
+
+        loadMenu()
 
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_categories,R.id.nav_cart, R.id.nav_orders, R.id.nav_sign_out
             ), drawerLayout
         )
+    }
+
+    private fun loadMenu() {
+        val options = FirebaseRecyclerOptions.Builder<Category>()
+            .setQuery(categories,Category::class.java )
+            .setLifecycleOwner(this)
+            .build()
+
+        val adapter =
+            object : FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
+                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
+                    return MenuViewHolder(LayoutInflater.from(parent.context)
+                        .inflate(R.layout.menu_item, parent, false))
+                }
+                override fun onBindViewHolder(
+                    viewHolder: MenuViewHolder,
+                    position: Int,
+                    model: Category
+                ) {
+                    viewHolder.txtMenuName.text= model.name
+                    Picasso.with(baseContext).load(model.image).into(viewHolder.imageView)
+                    var clickItem:Category= model
+                    viewHolder.setItemClickListener(object :ItemClickListener{
+                        override fun onClick(view: View, position: Int, isLongClick: Boolean) {
+                            Toast.makeText(baseContext,""+clickItem.name,Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    )
+                }
+            }
+        recyler_menu.adapter=adapter
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
