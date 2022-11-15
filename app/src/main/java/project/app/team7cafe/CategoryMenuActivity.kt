@@ -22,19 +22,22 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.gms.common.internal.service.Common
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import project.app.team7cafe.Interface.ItemClickListener
 import project.app.team7cafe.Model.Category
 import project.app.team7cafe.ViewHolder.MenuViewHolder
 import project.app.team7cafe.databinding.ActivityCategoryMenuBinding
 
-class CategoryMenuActivity(options: FirebaseRecyclerOptions<Category>) : AppCompatActivity() {
+class CategoryMenuActivity() : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityCategoryMenuBinding
     private lateinit var auth: FirebaseAuth
+
 
     val database = FirebaseDatabase.getInstance()
     lateinit var txtFullName:TextView
@@ -45,7 +48,7 @@ class CategoryMenuActivity(options: FirebaseRecyclerOptions<Category>) : AppComp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        auth = Firebase.auth
         binding = ActivityCategoryMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
