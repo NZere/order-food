@@ -1,5 +1,6 @@
 package project.app.team7cafe
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -44,6 +45,7 @@ class CategoryMenuActivity() : AppCompatActivity() {
     lateinit var recyler_menu: RecyclerView
     lateinit var layoutManager:LinearLayoutManager
     lateinit var categories:DatabaseReference
+    lateinit var adapter:FirebaseRecyclerAdapter<Category, MenuViewHolder>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,7 +103,7 @@ class CategoryMenuActivity() : AppCompatActivity() {
             .setLifecycleOwner(this)
             .build()
 
-        val adapter =
+        adapter =
             object : FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
                     return MenuViewHolder(LayoutInflater.from(parent.context)
@@ -117,7 +119,11 @@ class CategoryMenuActivity() : AppCompatActivity() {
                     var clickItem:Category= model
                     viewHolder.setItemClickListener(object :ItemClickListener{
                         override fun onClick(view: View, position: Int, isLongClick: Boolean) {
-                            Toast.makeText(baseContext,""+clickItem.name,Toast.LENGTH_SHORT).show()
+                            val intent:Intent = Intent(this@CategoryMenuActivity, FoodListActivity::class.java)
+                            intent.putExtra("CategoryId", adapter.getRef(position).key)
+                            startActivity(intent)
+
+                            Toast.makeText(baseContext,""+adapter.getRef(position).key,Toast.LENGTH_SHORT).show()
                         }
                     }
                     )
