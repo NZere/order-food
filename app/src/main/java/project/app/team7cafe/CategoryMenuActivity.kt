@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.gms.common.internal.service.Common
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -68,6 +69,11 @@ class CategoryMenuActivity() : AppCompatActivity() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
 
+        var fab:FloatingActionButton = findViewById(R.id.fab)
+        fab.setOnClickListener {
+            val intent: Intent = Intent(this@CategoryMenuActivity, CartActivity::class.java)
+            startActivity(intent)
+        }
 
 
         //set name of user
