@@ -13,6 +13,7 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -33,7 +34,7 @@ class FoodDetailActivity : AppCompatActivity() {
     lateinit var food_image: ImageView
 
     lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-    lateinit var btn_cart: ExtendedFloatingActionButton
+    lateinit var btn_cart: FloatingActionButton
     lateinit var elegantNumberButton: ElegantNumberButton
 
     var food_id: String = ""
@@ -54,11 +55,11 @@ class FoodDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_food_detail)
 
         elegantNumberButton = findViewById(R.id.number_button)
-        btn_cart = findViewById(R.id.btnCart)
+        btn_cart = findViewById(R.id.btnCart) as FloatingActionButton
         food_description = findViewById(R.id.food_description)
         food_name = findViewById(R.id.food_name)
         food_price = findViewById(R.id.food_price)
-        food_image = findViewById(R.id.food_image)
+        food_image = findViewById(R.id.img_food)
 
         collapsingToolbarLayout = findViewById(R.id.collapsing)
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpendedAppbat)
