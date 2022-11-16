@@ -87,6 +87,12 @@ class FoodListActivity : AppCompatActivity() {
                                 ""+ adapter.getRef(position).key,
                                 Toast.LENGTH_SHORT
                             ).show()
+
+                            val intent:Intent = Intent(this@FoodListActivity, FoodDetailActivity::class.java)
+                            intent.putExtra("FoodId", adapter.getRef(position).key)
+                            startActivity(intent)
+
+
                         }
                     }
                     )
