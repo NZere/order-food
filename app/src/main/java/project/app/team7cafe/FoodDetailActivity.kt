@@ -22,8 +22,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import project.app.team7cafe.Database.Database
 import project.app.team7cafe.Interface.ItemClickListener
 import project.app.team7cafe.Model.Food
+import project.app.team7cafe.Model.Order
 import project.app.team7cafe.ViewHolder.FoodViewHolder
 
 class FoodDetailActivity : AppCompatActivity() {
@@ -49,6 +51,7 @@ class FoodDetailActivity : AppCompatActivity() {
     lateinit var layoutManager: LinearLayoutManager
 
     lateinit var adapter: FirebaseRecyclerAdapter<Food, FoodViewHolder>
+    lateinit var food_item:Food
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +59,24 @@ class FoodDetailActivity : AppCompatActivity() {
 
         elegantNumberButton = findViewById(R.id.number_button)
         btn_cart = findViewById(R.id.btnCart) as FloatingActionButton
+
+        btn_cart.setOnClickListener(object:View.OnClickListener{
+            override fun onClick(v: View?) {
+
+                var ord:Order= Order(food_id,
+                    food_item.name,
+                    elegantNumberButton.number,
+                    food_item.price,
+                    food_item.discount    )
+                var d= Database(this@FoodDetailActivity)
+                d.addToCart(ord)
+                Toast.makeText(this@FoodDetailActivity, "added to cart ", Toast.LENGTH_SHORT).show()
+
+            }
+
+        }
+        )
+
         food_description = findViewById(R.id.food_description)
         food_name = findViewById(R.id.food_name)
         food_price = findViewById(R.id.food_price)
@@ -80,7 +101,7 @@ class FoodDetailActivity : AppCompatActivity() {
         food.child(food_id).addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                var food_item: Food?=snapshot.getValue(Food::class.java)
+                food_item= snapshot.getValue(Food::class.java)!!
                 if (food_item != null) {
                     if(food_item.image?.isEmpty() == true){
                         food_item.image="https://lasd.lv/public/assets/no-image.png"
