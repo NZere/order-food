@@ -28,17 +28,17 @@ class LoginActivity : AppCompatActivity() {
 
         val backBtn = findViewById<Button>(R.id.button_back)
         val registerText = findViewById<TextView>(R.id.register)
-        backBtn.setOnClickListener{
+        backBtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-        registerText.setOnClickListener{
+        registerText.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
-        
+
         val loginBtn = findViewById<Button>(R.id.button_login)
-        loginBtn.setOnClickListener{
+        loginBtn.setOnClickListener {
             performLogin()
         }
 
@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.input_password)
 
         // Null check on inputs
-        if(email.text.isEmpty() || password.text.isEmpty()){
+        if (email.text.isEmpty() || password.text.isEmpty()) {
             Toast.makeText(this, "Enter all attributes!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -64,65 +64,76 @@ class LoginActivity : AppCompatActivity() {
                     // Sign in success, navigate to the Home Activity
                     //check orders
 
-                    var not_ordered = checkOrders()
+                    val users = database.getReference("User")
+                    users.child(auth.currentUser?.uid!!).get().addOnSuccessListener {
+                        if (it.exists()) {
+                            var not_ordered = it.child("has_unordered").value.toString().toBoolean()
+                            if (not_ordered) {
+                                val intent = Intent(this, CategoryMenuActivity::class.java)
+                                startActivity(intent)
 
-                    if (not_ordered){
-                        val intent = Intent(this, CategoryMenuActivity::class.java)
-                        startActivity(intent)
+                                Toast.makeText(
+                                    baseContext, "Authentication successfully.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                val intent = Intent(this, HomeActivity::class.java)
+                                startActivity(intent)
 
-                        Toast.makeText(baseContext, "Authentication successfully.",
-                            Toast.LENGTH_SHORT).show()
-                    }
-                    else{
-                        val intent = Intent(this, HomeActivity::class.java)
-                        startActivity(intent)
-
-                        Toast.makeText(baseContext, "Authentication successfully.",
-                            Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    baseContext, "Authentication successfully",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     }
 
                 } else {
                     // If sign in fails, display a message to the user.
-                    Toast.makeText(baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(baseContext, "error",
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    baseContext, "error",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
     }
 
-
-    private fun checkOrders():Boolean{
-        val users = database.getReference("User")
-        var not_ordered=false
-        users.child(auth.currentUser?.uid!!).get().addOnSuccessListener {
-            if (it.exists()) {
-//                Toast.makeText(baseContext, "here",
-//                    Toast.LENGTH_SHORT).show()
-                users.child(auth.currentUser?.uid!!).child("Orders").addValueEventListener(object:
-                    ValueEventListener {
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        // This method is called once with the initial value and again
-                        // whenever data at this location is updated.
-                        for (ds in snapshot.children){
-                            if (ds.child("is_ordered").value == false){
-                                not_ordered=true
-                            }
-                        }
-                    }
-                    override fun onCancelled(error: DatabaseError) {
-                    }
-                })
-            }
-        }.addOnFailureListener{
-            Toast.makeText(baseContext, "order number failed",
-                Toast.LENGTH_SHORT).show()
-        }
-
-        return not_ordered
-
-    }
+//
+//    private fun checkOrders():Boolean{
+//        val users = database.getReference("User")
+//        var not_ordered=false
+//        users.child(auth.currentUser?.uid!!).get().addOnSuccessListener {
+//            if (it.exists()) {
+////                Toast.makeText(baseContext, "here",
+////                    Toast.LENGTH_SHORT).show()
+//                users.child(auth.currentUser?.uid!!).child("Orders").addValueEventListener(object:
+//                    ValueEventListener {
+//
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        // This method is called once with the initial value and again
+//                        // whenever data at this location is updated.
+//                        for (ds in snapshot.children){
+//                            if (ds.child("is_ordered").value == false){
+//                                not_ordered=true
+//                            }
+//                        }
+//                    }
+//                    override fun onCancelled(error: DatabaseError) {
+//                    }
+//                })
+//            }
+//        }.addOnFailureListener{
+//            Toast.makeText(baseContext, "order number failed",
+//                Toast.LENGTH_SHORT).show()
+//        }
+//
+//        return not_ordered
+//
+//    }
 }

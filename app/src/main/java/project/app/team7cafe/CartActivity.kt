@@ -50,14 +50,14 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun loadListFood() {
-        var cart = Database(this).carts()
+        var cart = Database(this@CartActivity).carts()
         cartAdapter=CartAdapter(cart,this)
         recyclerView.adapter=cartAdapter
 
         var total = 0
 
         for(order:Order in cart){
-            total+=(order.price as Int)*(order.quantity as Int)
+            total+=(order.price?.toInt()!!)*(order.quantity?.toInt()!!)
         }
 
         var locate = Locale("en","US")

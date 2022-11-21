@@ -98,7 +98,7 @@ class FoodDetailActivity : AppCompatActivity() {
     }
 
     private fun getDetailFood(foodId: String) {
-        food.child(food_id).addValueEventListener(object : ValueEventListener {
+        food.child(foodId).addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 food_item= snapshot.getValue(Food::class.java)!!

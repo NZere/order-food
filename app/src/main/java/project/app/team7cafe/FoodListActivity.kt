@@ -44,9 +44,14 @@ class FoodListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_food_list)
 
+        try {
+        }catch(_:Exception){        }
+
         recyler_food = findViewById(R.id.recycler_food)
         recyler_food.setHasFixedSize(true)
-        layoutManager = LinearLayoutManager(this)
+//        layoutManager = LinearLayoutManager(this)
+        layoutManager = WrapContentLayoutManager(this@FoodListActivity, LinearLayoutManager.HORIZONTAL,false)
+
         recyler_food.layoutManager = layoutManager
 
         if (intent != null) {
@@ -54,6 +59,9 @@ class FoodListActivity : AppCompatActivity() {
         }
         if (category_id.isNotEmpty()) {
             loadListFood(category_id)
+
+//            recyler_food.recycledViewPool.clear()
+//            adapter.notifyDataSetChanged()
         }
 
     }
@@ -82,6 +90,7 @@ class FoodListActivity : AppCompatActivity() {
                     var clickItem: Food = model
                     holder.setItemClickListener(object : ItemClickListener {
                         override fun onClick(view: View, position: Int, isLongClick: Boolean) {
+
                             Toast.makeText(
                                 baseContext,
                                 ""+ adapter.getRef(position).key,
@@ -100,6 +109,7 @@ class FoodListActivity : AppCompatActivity() {
 
             }
         Log.d("Tag", ""+adapter.itemCount)
-        recyler_food.adapter=adapter
+        recyler_food.adapter= adapter
+
     }
 }

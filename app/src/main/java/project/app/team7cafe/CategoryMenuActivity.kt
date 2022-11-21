@@ -88,7 +88,9 @@ class CategoryMenuActivity() : AppCompatActivity() {
         }
         recyler_menu= findViewById(R.id.recycler_menu)
         recyler_menu.setHasFixedSize(true)
-        layoutManager = LinearLayoutManager(this)
+//        layoutManager = LinearLayoutManager(this)
+
+        layoutManager = WrapContentLayoutManager(this@CategoryMenuActivity, LinearLayoutManager.HORIZONTAL,false)
         recyler_menu.layoutManager = layoutManager
 
         loadMenu()

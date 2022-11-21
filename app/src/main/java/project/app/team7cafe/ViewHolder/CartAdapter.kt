@@ -44,6 +44,11 @@ class CartAdapter(listData:List<Order>, context: Context): RecyclerView.Adapter<
     var  listData: List<Order> = ArrayList()
     lateinit var context:Context
 
+    init{
+        this.listData=listData
+        this.context = context
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         var inflater:LayoutInflater= LayoutInflater.from(context)
         var itemView:View = inflater.inflate(R.layout.cart_layout,parent, false)
@@ -58,7 +63,7 @@ class CartAdapter(listData:List<Order>, context: Context): RecyclerView.Adapter<
 
         var locate = Locale("en","US")
         var fmt = NumberFormat.getCurrencyInstance(locate)
-        var price= (listData[position].price as Int)*(listData.get(position).quantity as Int)
+        var price= (listData[position].price!!.toInt())*(listData.get(position).quantity!!.toInt())
         holder.txt_price!!.text=fmt.format(price)
         holder.txt_cart_name!!.text=listData.get(position).productName
 
