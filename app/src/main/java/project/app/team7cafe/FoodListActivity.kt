@@ -50,7 +50,7 @@ class FoodListActivity : AppCompatActivity() {
         recyler_food = findViewById(R.id.recycler_food)
         recyler_food.setHasFixedSize(true)
 //        layoutManager = LinearLayoutManager(this)
-        layoutManager = WrapContentLayoutManager(this@FoodListActivity, LinearLayoutManager.HORIZONTAL,false)
+        layoutManager = WrapContentLayoutManager(this@FoodListActivity, LinearLayoutManager.VERTICAL,false)
 
         recyler_food.layoutManager = layoutManager
 

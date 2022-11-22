@@ -40,7 +40,8 @@ class CartActivity : AppCompatActivity() {
 
         recyclerView=findViewById(R.id.listCart)
         recyclerView.setHasFixedSize(true)
-        layoutManager = LinearLayoutManager(this@CartActivity)
+//        layoutManager = LinearLayoutManager(this@CartActivity)
+        layoutManager = WrapContentLayoutManager(this@CartActivity, LinearLayoutManager.VERTICAL,false)
         recyclerView.layoutManager = layoutManager
 
         txtTotalPrice=findViewById(R.id.total)
