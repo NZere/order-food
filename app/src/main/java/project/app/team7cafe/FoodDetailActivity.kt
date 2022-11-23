@@ -68,6 +68,7 @@ class FoodDetailActivity : AppCompatActivity() {
                     elegantNumberButton.number,
                     food_item.price,
                     food_item.discount    )
+                //check if it exists add
                 var d= Database(this@FoodDetailActivity)
                 d.addToCart(ord)
                 Toast.makeText(this@FoodDetailActivity, "added to cart ", Toast.LENGTH_SHORT).show()

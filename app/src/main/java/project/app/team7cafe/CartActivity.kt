@@ -3,6 +3,7 @@ package project.app.team7cafe
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract.Data
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,13 +47,19 @@ class CartActivity : AppCompatActivity() {
 
         txtTotalPrice=findViewById(R.id.total)
         btnPay=findViewById(R.id.btnPlaceOrder)
+
+        btnPay.setOnClickListener {
+
+        }
         loadListFood()
+
 
     }
 
     private fun loadListFood() {
         var cart = Database(this@CartActivity).carts()
         cartAdapter=CartAdapter(cart,this)
+        cartAdapter.notifyDataSetChanged()
         recyclerView.adapter=cartAdapter
 
         var total = 0
@@ -68,3 +75,4 @@ class CartActivity : AppCompatActivity() {
 
     }
 }
+

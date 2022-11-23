@@ -1,14 +1,13 @@
 package project.app.team7cafe.ViewHolder
 
-import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.amulyakhare.textdrawable.TextDrawable
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+import project.app.team7cafe.CartActivity
+import project.app.team7cafe.Database.Database
 import project.app.team7cafe.Interface.ItemClickListener
 import project.app.team7cafe.Model.Order
 import project.app.team7cafe.R
@@ -20,7 +19,7 @@ open class CartViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView), 
     private lateinit var itemClickListener: ItemClickListener
     var txt_cart_name: TextView? = null
     var txt_price: TextView? = null
-    var img_cart_count: ImageView? = null
+    var btn_quantity: ElegantNumberButton? = null
     fun setItemClickListener(itemClickListener: ItemClickListener) {
         this.itemClickListener = itemClickListener
     }
@@ -28,7 +27,7 @@ open class CartViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView), 
     init {
         this.txt_cart_name = itemView.findViewById(R.id.cart_item_name)
         this.txt_price = itemView.findViewById(R.id.cart_item_Price)
-        this.img_cart_count=itemView.findViewById(R.id.cart_item_count)
+        this.btn_quantity=itemView.findViewById(R.id.quantity_button)
         itemView.setOnClickListener(this)
 
     }
@@ -40,26 +39,51 @@ open class CartViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView), 
 
 }
 
-class CartAdapter(listData:List<Order>, context: Context): RecyclerView.Adapter<CartViewHolder>() {
+class CartAdapter(listData:List<Order>, cartAct: CartActivity): RecyclerView.Adapter<CartViewHolder>() {
     var  listData: List<Order> = ArrayList()
-    lateinit var context:Context
+//    lateinit var context:Context
+    lateinit var cartAct:CartActivity
 
     init{
         this.listData=listData
-        this.context = context
+//        this.context = context
+        this.cartAct = cartAct
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        var inflater:LayoutInflater= LayoutInflater.from(context)
+//        var inflater:LayoutInflater= LayoutInflater.from(context)
+        var inflater:LayoutInflater= LayoutInflater.from(cartAct)
         var itemView:View = inflater.inflate(R.layout.cart_layout,parent, false)
         var ob = CartViewHolder(itemView)
         return ob
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        var drawable= TextDrawable.builder().buildRound(""+listData.get(position).quantity, Color.RED)
+        //or here if it exists add
+//        var drawable= TextDrawable.builder().buildRound(""+listData.get(position).quantity, Color.RED)
+//
+//        holder.img_cart_count?.setImageDrawable(drawable)
+        holder.btn_quantity?.number = listData[position].quantity
+        holder.btn_quantity!!.setOnValueChangeListener { view, oldValue, newValue ->
+            var order= listData[position]
+            order.quantity=newValue.toString()
+//            var d = Database(context).updateCart(order)
+            var d = Database(cartAct).updateCart(order)
 
-        holder.img_cart_count?.setImageDrawable(drawable)
+            var total = 0
+            var orders:List<Order> = Database(cartAct).carts()
+            for(order_item:Order in orders){
+                total+=(order_item.price?.toInt()!!)*(order_item.quantity?.toInt()!!)
+            }
+
+            var locate = Locale("en","US")
+            var fmt = NumberFormat.getCurrencyInstance(locate)
+
+            cartAct.txtTotalPrice.text=fmt.format(total)
+
+
+
+        }
 
         var locate = Locale("en","US")
         var fmt = NumberFormat.getCurrencyInstance(locate)
@@ -75,3 +99,4 @@ class CartAdapter(listData:List<Order>, context: Context): RecyclerView.Adapter<
     }
 
 }
+
