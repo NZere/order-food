@@ -14,33 +14,9 @@ import project.app.team7cafe.R
 import java.text.NumberFormat
 import java.util.Locale
 
-open class CartViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
-
-    private lateinit var itemClickListener: ItemClickListener
-    var txt_cart_name: TextView? = null
-    var txt_price: TextView? = null
-    var btn_quantity: ElegantNumberButton? = null
-    fun setItemClickListener(itemClickListener: ItemClickListener) {
-        this.itemClickListener = itemClickListener
-    }
-
-    init {
-        this.txt_cart_name = itemView.findViewById(R.id.cart_item_name)
-        this.txt_price = itemView.findViewById(R.id.cart_item_Price)
-        this.btn_quantity=itemView.findViewById(R.id.quantity_button)
-        itemView.setOnClickListener(this)
-
-    }
-
-    override fun onClick(v: View?) {
-        TODO("Not yet implemented")
-    }
-
-
-}
 
 class CartAdapter(listData:List<Order>, cartAct: CartActivity): RecyclerView.Adapter<CartViewHolder>() {
-    var  listData: List<Order> = ArrayList()
+    var  listData: List<Order> = ArrayList<Order>()
 //    lateinit var context:Context
     lateinit var cartAct:CartActivity
 
@@ -96,6 +72,21 @@ class CartAdapter(listData:List<Order>, cartAct: CartActivity): RecyclerView.Ada
 
     override fun getItemCount(): Int {
         return listData.size
+    }
+
+    fun getItem(position: Int):Order{
+        return listData[position]
+    }
+
+    fun removeItem(position: Int){
+        listData.drop(position)
+        notifyItemRemoved(position)
+
+    }
+    fun restoreItem(item:Order, position: Int){
+        listData.toMutableList().add(position,item)
+        notifyItemInserted(position)
+
     }
 
 }

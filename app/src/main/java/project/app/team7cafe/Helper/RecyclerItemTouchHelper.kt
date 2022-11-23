@@ -1,58 +1,84 @@
-package project.app.team7cafe.Helper;
+package project.app.team7cafe.Helper
 
-import android.view.View;
+import android.graphics.Canvas
+import android.view.View
+import project.app.team7cafe.Interface.RecyclerItemTouchHelperListener
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import project.app.team7cafe.Model.Order
+import project.app.team7cafe.ViewHolder.CartViewHolder
+import java.util.ArrayList
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
+class RecyclerItemTouchHelper(
+    dragDirs: Int,
+    swipeDirs: Int,
+    listener: RecyclerItemTouchHelperListener?
+) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
+    private val listener: RecyclerItemTouchHelperListener?
 
-import project.app.team7cafe.Interface.RecyclerItemTouchHelperListener;
-
-public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
-    /**
-     * Creates a Callback for the given drag and swipe allowance. These values serve as
-     * defaults
-     * and if you want to customize behavior per ViewHolder, you can override
-     * {@link #getSwipeDirs(RecyclerView, ViewHolder)}
-     * and / or {@link #getDragDirs(RecyclerView, ViewHolder)}.
-     *
-     * @param dragDirs  Binary OR of direction flags in which the Views can be dragged. Must be
-     *                  composed of {@link #LEFT}, {@link #RIGHT}, {@link #START}, {@link
-     *                  #END},
-     *                  {@link #UP} and {@link #DOWN}.
-     * @param swipeDirs Binary OR of direction flags in which the Views can be swiped. Must be
-     *                  composed of {@link #LEFT}, {@link #RIGHT}, {@link #START}, {@link
-     *                  #END},
-     *                  {@link #UP} and {@link #DOWN}.
-     */
-
-    private RecyclerItemTouchHelperListener listener;
-
-    public RecyclerItemTouchHelper(int dragDirs, int swipeDirs, RecyclerItemTouchHelperListener listener) {
-        super(dragDirs, swipeDirs);
-        this.listener = listener;
+    init {
+        this.listener = listener
     }
 
-    @Override
-    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        return true;
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
+        return true
     }
 
-    @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        if (listener!=null){
-            listener.onSwipped(viewHolder,direction,viewHolder.getAdapterPosition());
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        listener?.onSwipped(viewHolder, direction, viewHolder.adapterPosition)
+    }
+
+    override fun convertToAbsoluteDirection(flags: Int, layoutDirection: Int): Int {
+        return super.convertToAbsoluteDirection(flags, layoutDirection)
+    }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        val front: View = (viewHolder as CartViewHolder).view_front
+        getDefaultUIUtil().clearView(front)
+    }
+
+    override fun onChildDraw(
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
+    ) {
+        val front: View = (viewHolder as CartViewHolder).view_front
+        getDefaultUIUtil().onDraw(c, recyclerView, front, dX, dY, actionState, isCurrentlyActive)
+    }
+
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        if (viewHolder != null) {
+            val front: View = (viewHolder as CartViewHolder).view_front
+            getDefaultUIUtil().onSelected(front)
         }
     }
 
-    @Override
-    public int convertToAbsoluteDirection(int flags, int layoutDirection) {
-        return super.convertToAbsoluteDirection(flags, layoutDirection);
-    }
-
-    @Override
-    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-//        View front =
-        super.clearView(recyclerView, viewHolder);
+    override fun onChildDrawOver(
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
+    ) {
+        val front: View = (viewHolder as CartViewHolder).view_front
+        getDefaultUIUtil().onDrawOver(
+            c,
+            recyclerView,
+            front,
+            dX,
+            dY,
+            actionState,
+            isCurrentlyActive
+        )
     }
 }

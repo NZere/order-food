@@ -34,10 +34,10 @@ open class Database(context: Context?) : SQLiteAssetHelper(context, DB_NAME, nul
         return result
     }
 
-    fun addToCart(order: Order) {
+    public fun addToCart(order: Order) {
         val db = readableDatabase
         val query = String.format(
-            "INSERT INTO OrderDetail( ProductID,ProductName, Quantity, Price, Discount) VALUES('%s','%s','%s','%s','%s');",
+            "INSERT INTO OrderDetail(ProductID, ProductName, Quantity, Price, Discount) VALUES('%s','%s','%s','%s','%s');",
             order.productId,
             order.productName,
             order.quantity,
@@ -53,10 +53,16 @@ open class Database(context: Context?) : SQLiteAssetHelper(context, DB_NAME, nul
         db.execSQL(query)
     }
 
-    fun updateCart(order: Order) {
+    fun updateCart(order: Order){
         val db = readableDatabase
-        val query = String.format(
-            "UPDATE OrderDetail SET Quantity = %s WHERE ID = %d", order.quantity, order.ID)
+        val query = String.format("UPDATE OrderDetail SET Quantity = %s WHERE ID = %d", order.quantity,order.ID)
+        db.execSQL(query)
+
+    }
+
+    fun removeFromCart(productId:String){
+        val db = readableDatabase
+        val query = String.format("DELETE FROM OrderDetail WHERE ProductID = %s", productId)
         db.execSQL(query)
     }
 
