@@ -80,6 +80,7 @@ class RegisterActivity : AppCompatActivity() {
                     hashMap["timestamp"]=timestamp
                     hashMap["order_number"]=0
                     hashMap["has_unordered"]=false
+                    hashMap["table_id"]=-1
 
 
                     val users = database.getReference("User")
@@ -95,6 +96,8 @@ class RegisterActivity : AppCompatActivity() {
 
                     Toast.makeText(baseContext, "Authentication successfully.",
                         Toast.LENGTH_SHORT).show()
+
+                    users.child(auth.currentUser?.uid!!).child("MyCoupons").child(hashMap["order_id"].toString()).setValue(hashMap)
 
                     // Sign in success, go to HomeActivity
                     val intent = Intent(this, HomeActivity::class.java)

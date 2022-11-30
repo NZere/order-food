@@ -68,7 +68,8 @@ class LoginActivity : AppCompatActivity() {
                     users.child(auth.currentUser?.uid!!).get().addOnSuccessListener {
                         if (it.exists()) {
                             var not_ordered = it.child("has_unordered").value.toString().toBoolean()
-                            if (not_ordered) {
+                            var table_id = it.child("table_id").value.toString().toInt()
+                            if (not_ordered && table_id!=-1) {
                                 val intent = Intent(this, CategoryMenuActivity::class.java)
                                 startActivity(intent)
 

@@ -196,15 +196,15 @@ class Reserve1Activity : AppCompatActivity() {
         nextBtn.visibility = View.VISIBLE
 
         val users = database.getReference("User")
-        val timestamp = System.currentTimeMillis()
+//        val timestamp = System.currentTimeMillis()
 
-        var hashMap: HashMap<String, Any?> = HashMap()
-
-        hashMap["user_id"]= auth.currentUser?.uid
-        hashMap["date_start"]= timestamp
-        hashMap["is_ordered"]= false
-        hashMap["ordered_date"]=""
-        hashMap["table_id"]=final_table_id
+//        var hashMap: HashMap<String, Any?> = HashMap()
+//
+//        hashMap["user_id"]= auth.currentUser?.uid
+//        hashMap["date_start"]= timestamp
+//        hashMap["is_ordered"]= false
+//        hashMap["ordered_date"]=""
+//        hashMap["table_id"]=final_table_id
 
         var tables = database.getReference("Table")
 
@@ -217,7 +217,8 @@ class Reserve1Activity : AppCompatActivity() {
                 order_num = order_number
                 Toast.makeText(baseContext, order_num.toString(),
                     Toast.LENGTH_SHORT).show()
-                hashMap["order_id"]= (order_num+1).toString()
+//                hashMap["order_id"]= (order_num+1).toString()
+
             }
         }.addOnFailureListener{
             Toast.makeText(baseContext, "order number failed",
@@ -229,18 +230,18 @@ class Reserve1Activity : AppCompatActivity() {
             val intent = Intent(this, CategoryMenuActivity::class.java)
             startActivity(intent)
 
-            users.child(auth.currentUser?.uid!!).child("Order").child(hashMap["order_id"].toString())
-                .setValue(hashMap)
-                .addOnSuccessListener {
-
-
-                    Toast.makeText(baseContext, "table with id "+ final_table_id +" was saved successfully"+hashMap["order_id"].toString(),
-                        Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener{
-                    Toast.makeText(baseContext, "table is not selected",
-                        Toast.LENGTH_SHORT).show()
-                }
+//            users.child(auth.currentUser?.uid!!).child("Order").child(hashMap["order_id"].toString())
+//                .setValue(hashMap)
+//                .addOnSuccessListener {
+//
+//
+//                    Toast.makeText(baseContext, "table with id "+ final_table_id +" was saved successfully"+hashMap["order_id"].toString(),
+//                        Toast.LENGTH_SHORT).show()
+//                }
+//                .addOnFailureListener{
+//                    Toast.makeText(baseContext, "table is not selected",
+//                        Toast.LENGTH_SHORT).show()
+//                }
             users.child(auth.currentUser?.uid!!).child("has_unordered")
                 .setValue(true)
                 .addOnSuccessListener {
@@ -253,8 +254,9 @@ class Reserve1Activity : AppCompatActivity() {
                     Toast.makeText(baseContext, "user table is not updated",
                         Toast.LENGTH_SHORT).show()
                 }
-            users.child(auth.currentUser?.uid!!).child("order_number").setValue(hashMap["order_id"].toString())
+//            users.child(auth.currentUser?.uid!!).child("order_number").setValue(hashMap["order_id"].toString())
             tables.child(final_table_id).child("is_reserved").setValue(true)
+            users.child(auth.currentUser?.uid!!).child("table_id").setValue(final_table_id)
         }
 
 

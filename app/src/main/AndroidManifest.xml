@@ -12,6 +12,20 @@
         android:theme="@style/Theme.Team7cafe"
         tools:replace="android:theme">
         <activity
+            android:name=".OrderListActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".CouponActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".CartActivity"
             android:exported="false">
             <meta-data

@@ -1,22 +1,27 @@
-package project.app.team7cafe.Model;
+package project.app.team7cafe.Model
 
-import java.util.List;
+class OrderRequest {
+    var user_id: String? = null
+    var table_id: String? = null
+    var total: String? = null
+    var coupon: String? = null
+    var status: String? = null
+    var foods: List<Order>? = null
 
-public class OrderRequest {
-    private String user_id;
-    private String table_id;
-    private String total;
-    private String coupon;
-    private List<Order> foods;
-
-    public OrderRequest() {
-    }
-
-    public OrderRequest(String user_id, String table_id, String total, String coupon, List<Order> foods) {
-        this.user_id = user_id;
-        this.table_id = table_id;
-        this.total = total;
-        this.coupon = coupon;
-        this.foods = foods;
+    constructor() {}
+    constructor(
+        user_id: String?,
+        table_id: String?,
+        total: String?,
+        coupon: String?,
+        status:String?,
+        foods: List<Order>?
+    ) {
+        this.user_id = user_id
+        this.table_id = table_id
+        this.total = total
+        this.coupon = coupon
+        this.status="0" // 0 - in queue,  1- in process 2- gave it to waiter 3- done
+        this.foods = foods
     }
 }

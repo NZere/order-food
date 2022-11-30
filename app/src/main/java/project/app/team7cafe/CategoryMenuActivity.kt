@@ -69,6 +69,42 @@ class CategoryMenuActivity() : AppCompatActivity() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
 
+        navView.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.nav_categories -> {
+                    val intent=Intent(this@CategoryMenuActivity, CategoryMenuActivity::class.java)
+                    startActivity(intent)
+                    return@setNavigationItemSelectedListener true
+                }
+                R.id.nav_cart -> {
+                    val intent=Intent(this@CategoryMenuActivity, CartActivity::class.java)
+                    startActivity(intent)
+                    return@setNavigationItemSelectedListener true
+                }
+                R.id.nav_orders -> {
+                    val intent=Intent(this@CategoryMenuActivity, OrderListActivity::class.java)
+                    startActivity(intent)
+                    return@setNavigationItemSelectedListener true
+                }
+                R.id.nav_coupons -> {
+                    val intent=Intent(this@CategoryMenuActivity, CouponActivity::class.java)
+                    startActivity(intent)
+                    return@setNavigationItemSelectedListener true
+                }
+                R.id.nav_sign_out -> {
+                    val intent=Intent(this@CategoryMenuActivity, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                    return@setNavigationItemSelectedListener true
+                }
+
+                else -> {
+                    return@setNavigationItemSelectedListener false
+                }
+            }
+        }
+
+
         var fab:FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
             val intent: Intent = Intent(this@CategoryMenuActivity, CartActivity::class.java)
@@ -100,7 +136,7 @@ class CategoryMenuActivity() : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_categories,R.id.nav_cart, R.id.nav_orders, R.id.nav_sign_out
+                R.id.nav_categories,R.id.nav_cart,R.id.nav_coupons, R.id.nav_orders, R.id.nav_sign_out
             ), drawerLayout
         )
     }

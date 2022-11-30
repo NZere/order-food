@@ -13,6 +13,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 class HomeActivity : AppCompatActivity() {
+    private var auth: FirebaseAuth = Firebase.auth
+
+    val database = FirebaseDatabase.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -23,7 +27,9 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
         takeBtn.setOnClickListener {
-            val intent = Intent(this, Reserve1Activity::class.java)
+            val users = database.getReference("User")
+            users.child(auth.currentUser?.uid!!).child("table_id").setValue(-100)
+            val intent = Intent(this, CategoryMenuActivity::class.java)
             startActivity(intent)
         }
     }

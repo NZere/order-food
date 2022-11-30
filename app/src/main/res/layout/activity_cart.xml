@@ -64,8 +64,8 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="#ED0909"
-                android:text="Place Order"
-                android:textColor="#FFFFFF" />
+                android:text="Place the Order"
+                android:textColor="@color/black" />
 
         </RelativeLayout>
 
