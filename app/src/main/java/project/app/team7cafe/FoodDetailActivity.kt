@@ -60,23 +60,19 @@ class FoodDetailActivity : AppCompatActivity() {
         elegantNumberButton = findViewById(R.id.number_button)
         btn_cart = findViewById(R.id.btnCart) as FloatingActionButton
 
-        btn_cart.setOnClickListener(object:View.OnClickListener{
-            override fun onClick(v: View?) {
-
-                var ord:Order= Order(food_id,
-                    food_item.name,
-                    elegantNumberButton.number,
-                    food_item.price,
-                    food_item.discount    )
-                //check if it exists add
-                var d= Database(this@FoodDetailActivity)
-                d.addToCart(ord)
-                Toast.makeText(this@FoodDetailActivity, "added to cart ", Toast.LENGTH_SHORT).show()
-
-            }
-
+        btn_cart.setOnClickListener {
+            var ord: Order = Order(
+                food_id,
+                food_item.name,
+                elegantNumberButton.number,
+                food_item.price,
+                food_item.discount
+            )
+            //check if it exists add
+            var d = Database(this@FoodDetailActivity)
+            d.addToCart(ord)
+            Toast.makeText(this@FoodDetailActivity, "added to cart ", Toast.LENGTH_SHORT).show()
         }
-        )
 
         food_description = findViewById(R.id.food_description)
         food_name = findViewById(R.id.food_name)

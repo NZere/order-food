@@ -113,6 +113,11 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                     table_id = it.child("table_id").value.toString()
                 }
             }
+            Toast.makeText(
+                this@CartActivity,
+                ""+couponTxt.text.toString(),
+                Toast.LENGTH_SHORT
+            ).show()
             coupons.child(couponTxt.text.toString()).get()
                 .addOnSuccessListener {
                     if (it.exists()) {
@@ -140,7 +145,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                     else{
                         Toast.makeText(
                             this@CartActivity,
-                            "Incorrect coupon code",
+                            "Incorrect coupon code"+couponTxt.text.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -149,7 +154,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                 .addOnFailureListener {
                     Toast.makeText(
                         this@CartActivity,
-                        "Incorrect coupon code",
+                        "Incorrect coupon code"+couponTxt.text.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
