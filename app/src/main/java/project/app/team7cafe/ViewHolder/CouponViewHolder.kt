@@ -11,13 +11,16 @@ class CouponViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View
     var txtCouponId: TextView
     var txtCouponName: TextView
     var btnCopyCoupon: Button
-    var itemClickListener: ItemClickListener? = null
+    private lateinit var itemClickListener: ItemClickListener
 
     init {
         txtCouponId = itemView.findViewById(R.id.coupon_item_id)
         txtCouponName = itemView.findViewById(R.id.coupon_item_name)
         btnCopyCoupon = itemView.findViewById(R.id.button_copy)
         itemView.setOnClickListener(this)
+    }
+    fun setItemClickListener(itemClickListener: ItemClickListener) {
+        this.itemClickListener = itemClickListener
     }
 
     override fun onClick(v: View) {

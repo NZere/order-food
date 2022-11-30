@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,10 +18,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
-import project.app.team7cafe.Model.MyCoupon
-import project.app.team7cafe.Model.OrderRequest
+import project.app.team7cafe.Interface.ItemClickListener
+import project.app.team7cafe.Model.Coupon
 import project.app.team7cafe.ViewHolder.CouponViewHolder
-import project.app.team7cafe.ViewHolder.OrderViewHolder
 
 class CouponActivity : AppCompatActivity() {
 
@@ -34,9 +34,8 @@ class CouponActivity : AppCompatActivity() {
     val food = database.getReference("Food")
     val request: DatabaseReference = database.getReference("Request")
     val coupons = database.getReference("Coupons")
-    val myCoupons = users.child("MyCoupons")
 
-    lateinit var adapter: FirebaseRecyclerAdapter<MyCoupon, CouponViewHolder>
+    lateinit var adapter: FirebaseRecyclerAdapter<Coupon, CouponViewHolder>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +50,13 @@ class CouponActivity : AppCompatActivity() {
     }
 
     fun loadCoupons(uid: String?) {
-        val options = FirebaseRecyclerOptions.Builder<MyCoupon>()
-            .setQuery(myCoupons, MyCoupon::class.java)
+        val options = FirebaseRecyclerOptions.Builder<Coupon>()
+            .setQuery(coupons.orderByChild("user_id").equalTo(auth.currentUser?.uid), Coupon::class.java)
             .setLifecycleOwner(this)
             .build()
 
         adapter =
-            object : FirebaseRecyclerAdapter<MyCoupon, CouponViewHolder>(options) {
+            object : FirebaseRecyclerAdapter<Coupon, CouponViewHolder>(options) {
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CouponViewHolder {
                     return CouponViewHolder(
                         LayoutInflater.from(parent.context)
@@ -69,18 +68,10 @@ class CouponActivity : AppCompatActivity() {
                 override fun onBindViewHolder(
                     holder: CouponViewHolder,
                     position: Int,
-                    model: MyCoupon
+                    model: Coupon
                 ) {
-                    coupons.child(model.coupon_id.toString()).get()
-                        .addOnSuccessListener {
-                            if (it.exists() && it.child("is_actual").value.toString().toBoolean()) {
-
-                                holder.txtCouponName.text = it.child("name").value.toString()
-                                holder.txtCouponId.text= model.coupon_id
-
-                            }
-                        }
-                    holder.txtCouponId.text= model.coupon_id
+                    holder.txtCouponName.text = model.name.toString()
+                    holder.txtCouponId.text= model.coupon_id.toString()
                     holder.btnCopyCoupon.setOnClickListener{
                         var clipboardManager:ClipboardManager= getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         var clip= ClipData.newPlainText("coupon id",holder.txtCouponId.text.toString())
@@ -90,6 +81,17 @@ class CouponActivity : AppCompatActivity() {
 
                         Toast.makeText(this@CouponActivity,"Copied"+holder.txtCouponId.text.toString(), Toast.LENGTH_SHORT).show()
                     }
+                    holder.setItemClickListener(object : ItemClickListener {
+                        override fun onClick(view: View, position: Int, isLongClick: Boolean) {
+                            var clipboardManager:ClipboardManager= getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            var clip= ClipData.newPlainText("coupon id",holder.txtCouponId.text.toString())
+                            clipboardManager.setPrimaryClip(clip)
+
+                            clip.description
+
+                            Toast.makeText(this@CouponActivity,"Copied"+holder.txtCouponId.text.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                    })
                 }
             }
         recyclerView.adapter=adapter
