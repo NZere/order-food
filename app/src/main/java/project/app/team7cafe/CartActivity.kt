@@ -42,7 +42,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
     val users = database.getReference("User")
     val food = database.getReference("Food")
     val request: DatabaseReference = database.getReference("Request")
-    val coupons = database.getReference("Coupons")
+    val coupons = database.getReference("Coupon")
 
     lateinit var txtTotalPrice: TextView
     lateinit var btnPay: Button
@@ -121,9 +121,12 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
             coupons.child(couponTxt.text.toString()).get()
                 .addOnSuccessListener {
                     if (it.exists()) {
-                        var f_total = txtTotalPrice.text.toString()
-                            .toDouble() * ((100 - it.child("discount").value.toString()
-                            .toDouble()) / 100)
+                        var f_total = txtTotalPrice.text.toString().toDouble() * ((100.0 - it.child("discount").value.toString().toDouble()) / 100.0)
+                        Toast.makeText(
+                            this@CartActivity,
+                            "here",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         order_request =
                             OrderRequest(
                                 user_id,
@@ -145,7 +148,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                     else{
                         Toast.makeText(
                             this@CartActivity,
-                            "Incorrect coupon code"+couponTxt.text.toString(),
+                            "Incorrect coupon code "+couponTxt.text.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -154,7 +157,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                 .addOnFailureListener {
                     Toast.makeText(
                         this@CartActivity,
-                        "Incorrect coupon code"+couponTxt.text.toString(),
+                        "Incorrect coupon code 2"+couponTxt.text.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -212,10 +215,8 @@ private fun loadListFood() {
         total += (order.price?.toInt()!!) * (order.quantity?.toInt()!!)
     }
 
-    var locate = Locale("en", "US")
-    var fmt = NumberFormat.getCurrencyInstance(locate)
 
-    txtTotalPrice.text = fmt.format(total)
+    txtTotalPrice.text = total.toString()
 
 }
 
@@ -242,10 +243,8 @@ override fun onSwipped(
             total += (order_item.price?.toInt()!!) * (order_item.quantity?.toInt()!!)
         }
 
-        var locate = Locale("en", "US")
-        var fmt = NumberFormat.getCurrencyInstance(locate)
 
-        txtTotalPrice.text = fmt.format(total)
+        txtTotalPrice.text = total.toString()
 
 
         var snackbar: Snackbar =
@@ -264,10 +263,8 @@ override fun onSwipped(
                 total += (order_item.price?.toInt()!!) * (order_item.quantity?.toInt()!!)
             }
 
-            var locate = Locale("en", "US")
-            var fmt = NumberFormat.getCurrencyInstance(locate)
 
-            txtTotalPrice.text = fmt.format(total)
+            txtTotalPrice.text = total.toString()
 
         }
         snackbar.setActionTextColor(Color.YELLOW)

@@ -33,7 +33,7 @@ class CouponActivity : AppCompatActivity() {
     val users = database.getReference("User")
     val food = database.getReference("Food")
     val request: DatabaseReference = database.getReference("Request")
-    val coupons = database.getReference("Coupons")
+    val coupons = database.getReference("Coupon")
 
     lateinit var adapter: FirebaseRecyclerAdapter<Coupon, CouponViewHolder>
 
@@ -71,7 +71,7 @@ class CouponActivity : AppCompatActivity() {
                     model: Coupon
                 ) {
                     holder.txtCouponName.text = model.name.toString()
-                    holder.txtCouponId.text= model.coupon_id.toString()
+                    holder.txtCouponId.text= adapter.getRef(position).key
                     holder.btnCopyCoupon.setOnClickListener{
                         var clipboardManager:ClipboardManager= getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         var clip= ClipData.newPlainText("coupon id",holder.txtCouponId.text.toString())

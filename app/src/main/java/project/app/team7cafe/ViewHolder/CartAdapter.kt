@@ -52,21 +52,18 @@ class CartAdapter(listData:List<Order>, cartAct: CartActivity): RecyclerView.Ada
                 total+=(order_item.price?.toInt()!!)*(order_item.quantity?.toInt()!!)
             }
 
-            var locate = Locale("en","US")
-            var fmt = NumberFormat.getCurrencyInstance(locate)
 
-            cartAct.txtTotalPrice.text=fmt.format(total)
+            cartAct.txtTotalPrice.text=total.toString()
 
 
 
         }
 
-        var locate = Locale("en","US")
-        var fmt = NumberFormat.getCurrencyInstance(locate)
         var price= (listData[position].price!!.toInt())*(listData.get(position).quantity!!.toInt())
-        holder.txt_price!!.text=fmt.format(price)
+        holder.txt_price!!.text=price.toString()
         holder.txt_cart_name!!.text=listData.get(position).productName
 
+//        notifyDataSetChanged()notifyDataSetChanged
 
     }
 
