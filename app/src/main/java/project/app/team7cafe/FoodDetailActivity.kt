@@ -66,7 +66,8 @@ class FoodDetailActivity : AppCompatActivity() {
                 food_item.name,
                 elegantNumberButton.number,
                 food_item.price,
-                food_item.discount
+                food_item.discount,
+                food_item.time
             )
             //check if it exists add
             var d = Database(this@FoodDetailActivity)
