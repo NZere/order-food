@@ -120,7 +120,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                 ""+couponTxt.text.toString(),
                 Toast.LENGTH_SHORT
             ).show()
-            coupons.equalTo(couponTxt.text.toString()).get()
+            coupons.child(couponTxt.text.toString()).get()
                 .addOnSuccessListener {
                     if (it.exists()) {
                         var f_total = txtTotalPrice.text.toString().toDouble() * ((100.0 - it.child("discount").value.toString().toDouble()) / 100.0)
@@ -140,7 +140,8 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                                 time_order
 
                             )
-                        request.child(System.currentTimeMillis().toString()).setValue(order_request)
+                        var time_order=System.currentTimeMillis().toString()
+                        request.child(time_order).setValue(order_request)
                         Database(baseContext).cleanCart()
                         Toast.makeText(
                             this@CartActivity,
@@ -148,6 +149,9 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                             Toast.LENGTH_SHORT
                         ).show()
                         finish()
+                        val intent:Intent = Intent(this@CartActivity, OrderDetailActivity::class.java)
+                        intent.putExtra("OrderRequestId", time_order)
+                        startActivity(intent)
                     }
                     else{
                         Toast.makeText(
