@@ -85,6 +85,14 @@ class CartAdapter(listData:List<Order>, cartAct: CartActivity): RecyclerView.Ada
         notifyItemInserted(position)
 
     }
+    fun getAvTime(): String? {
+        var maxTime = 0
+        for(i in listData){
+            if (i.time!!.toInt() > maxTime)
+                maxTime= i.time!!.toInt()
+        }
+        return maxTime.toString()
+    }
 
 }
 

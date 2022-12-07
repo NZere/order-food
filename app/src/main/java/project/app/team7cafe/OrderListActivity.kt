@@ -1,10 +1,16 @@
 package project.app.team7cafe
 
 import android.app.DownloadManager.Request
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -15,6 +21,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import project.app.team7cafe.Interface.ItemClickListener
 import project.app.team7cafe.Model.Category
 import project.app.team7cafe.Model.OrderRequest
 import project.app.team7cafe.ViewHolder.MenuViewHolder
@@ -41,7 +48,8 @@ class OrderListActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.listOrder)
         recyclerView.setHasFixedSize(true)
-        layoutManager = LinearLayoutManager(this)
+//        layoutManager = LinearLayoutManager(this)
+        layoutManager = WrapContentLayoutManager(this@OrderListActivity, LinearLayoutManager.VERTICAL,false)
         recyclerView.layoutManager = layoutManager
 
         loadOrders(auth.currentUser?.uid)
@@ -73,7 +81,19 @@ class OrderListActivity : AppCompatActivity() {
                     holder.txtOrderTable.text = model.table_id.toString()
                     holder.txtOrderTotal.text = model.total.toString()
 
+                    holder.setItemClickListener(object : ItemClickListener {
+                        override fun onClick(view: View, position: Int, isLongClick: Boolean) {
+                            val intent: Intent = Intent(this@OrderListActivity, OrderDetailActivity::class.java)
+                            intent.putExtra("OrderRequestId", adapter.getRef(position).key)
+                            startActivity(intent)
+
+//                            Toast.makeText(baseContext,""+adapter.getRef(position).key,Toast.LENGTH_SHORT).show()
+
+                        }
+                    })
                 }
+
+
             }
         recyclerView.adapter=adapter
 

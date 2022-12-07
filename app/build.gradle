@@ -89,4 +89,6 @@ dependencies {
 
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+    implementation "com.airbnb.android:lottie:3.3.0"
 }

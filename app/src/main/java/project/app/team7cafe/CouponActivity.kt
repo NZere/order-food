@@ -43,7 +43,8 @@ class CouponActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.listCoupon)
         recyclerView.setHasFixedSize(true)
-        layoutManager = LinearLayoutManager(this)
+//        layoutManager = LinearLayoutManager(this)
+        layoutManager = WrapContentLayoutManager(this@CouponActivity, LinearLayoutManager.VERTICAL,false)
         recyclerView.layoutManager = layoutManager
 
         loadCoupons(auth.currentUser?.uid)

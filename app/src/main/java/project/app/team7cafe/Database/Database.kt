@@ -12,7 +12,7 @@ open class Database(context: Context?) : SQLiteAssetHelper(context, DB_NAME, nul
     fun carts(): List<Order> {
         val db = readableDatabase
         val qb = SQLiteQueryBuilder()
-        val sqlSelect = arrayOf("ID","ProductName", "ProductID", "Quantity", "Price", "Discount")
+        val sqlSelect = arrayOf("ID","ProductName", "ProductID", "Quantity", "Price", "Discount","Time")
         val sqlTable = "OrderDetail"
         qb.tables = sqlTable
         val c = qb.query(db, sqlSelect, null, null, null, null, null)
@@ -26,7 +26,8 @@ open class Database(context: Context?) : SQLiteAssetHelper(context, DB_NAME, nul
                         c.getString(c.getColumnIndexOrThrow("ProductName")),
                         c.getString(c.getColumnIndexOrThrow("Quantity")),
                         c.getString(c.getColumnIndexOrThrow("Price")),
-                        c.getString(c.getColumnIndexOrThrow("Discount"))
+                        c.getString(c.getColumnIndexOrThrow("Discount")),
+                        c.getString(c.getColumnIndexOrThrow("Time"))
                     )
                 )
             } while (c.moveToNext())
@@ -37,12 +38,13 @@ open class Database(context: Context?) : SQLiteAssetHelper(context, DB_NAME, nul
     public fun addToCart(order: Order) {
         val db = readableDatabase
         val query = String.format(
-            "INSERT INTO OrderDetail(ProductID, ProductName, Quantity, Price, Discount) VALUES('%s','%s','%s','%s','%s');",
+            "INSERT INTO OrderDetail(ProductID, ProductName, Quantity, Price, Discount, Time) VALUES('%s','%s','%s','%s','%s','%s');",
             order.productId,
             order.productName,
             order.quantity,
             order.price,
-            order.discount
+            order.discount,
+            order.time
         )
         db.execSQL(query)
     }

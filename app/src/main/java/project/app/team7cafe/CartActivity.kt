@@ -52,6 +52,8 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
     lateinit var cartAdapter: CartAdapter
     lateinit var order_request: OrderRequest
 
+    lateinit var time_order:String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,7 +120,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                 ""+couponTxt.text.toString(),
                 Toast.LENGTH_SHORT
             ).show()
-            coupons.child(couponTxt.text.toString()).get()
+            coupons.equalTo(couponTxt.text.toString()).get()
                 .addOnSuccessListener {
                     if (it.exists()) {
                         var f_total = txtTotalPrice.text.toString().toDouble() * ((100.0 - it.child("discount").value.toString().toDouble()) / 100.0)
@@ -134,7 +136,9 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                                 f_total.toString(),
                                 couponTxt.text.toString(),
                                 "0",
-                                carts
+                                carts,
+                                time_order
+
                             )
                         request.child(System.currentTimeMillis().toString()).setValue(order_request)
                         Database(baseContext).cleanCart()
@@ -176,9 +180,11 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                             txtTotalPrice.text.toString(),
                             couponTxt.text.toString(),
                             "0",
-                            carts
+                            carts,
+                            time_order
                         )
-                    request.child(System.currentTimeMillis().toString()).setValue(order_request)
+                    var id=System.currentTimeMillis().toString()
+                    request.child(id).setValue(order_request)
                     Database(baseContext).cleanCart()
                     Toast.makeText(
                         this@CartActivity,
@@ -187,6 +193,9 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                     ).show()
 
                     finish()
+                    val intent: Intent = Intent(this@CartActivity, OrderDetailActivity::class.java)
+                    intent.putExtra("OrderRequestId", id)
+                    startActivity(intent)
                 }
             }
 
@@ -217,6 +226,8 @@ private fun loadListFood() {
 
 
     txtTotalPrice.text = total.toString()
+
+    time_order = cartAdapter.getAvTime().toString()
 
 }
 

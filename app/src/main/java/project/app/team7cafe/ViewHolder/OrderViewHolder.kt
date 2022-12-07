@@ -11,7 +11,12 @@ class OrderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.
     var txtOrderStatus: TextView
     var txtOrderTable: TextView
     var txtOrderTotal: TextView
-    var itemClickListener: ItemClickListener? = null
+    private lateinit var itemClickListener: ItemClickListener
+
+    fun setItemClickListener(itemClickListener: ItemClickListener){
+        this.itemClickListener=itemClickListener
+    }
+
 
     init {
         txtOrderId = itemView.findViewById(R.id.order_item_id)
