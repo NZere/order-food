@@ -50,8 +50,8 @@ class ListenOrder : Service(), ChildEventListener {
     }
 
     private fun showNotification(key: String?, request: OrderRequest?) {
-        var intent = Intent(baseContext, OrderListActivity::class.java) // change to OrderDetail
-        intent.putExtra("userId", request!!.user_id) // change to id
+        var intent = Intent(baseContext, OrderDetailActivity::class.java) // change to OrderDetail
+        intent.putExtra("OrderRequestId", key.toString()) // change to id
         var contentIntent = PendingIntent.getActivity(baseContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         var builder = Notification.Builder(baseContext)
@@ -62,7 +62,7 @@ class ListenOrder : Service(), ChildEventListener {
             .setTicker("Cafe Team 7")
             .setContentInfo("Your Order is updated")
             .setContentText("Order $key was updated status to ${convertCodeToStatus(
-                request.status.toString()
+                request!!.status.toString()
             )}")
             .setContentIntent(contentIntent)
             .setContentInfo("Info")

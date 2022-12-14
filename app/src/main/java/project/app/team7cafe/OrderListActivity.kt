@@ -52,12 +52,7 @@ class OrderListActivity : AppCompatActivity() {
         layoutManager = WrapContentLayoutManager(this@OrderListActivity, LinearLayoutManager.VERTICAL,false)
         recyclerView.layoutManager = layoutManager
 
-        if (intent == null) {
-            loadOrders(auth.currentUser?.uid)
-        }
-        else{
-            loadOrders(intent.getStringExtra("userId"))
-        }
+        loadOrders(auth.currentUser?.uid)
 
     }
 
