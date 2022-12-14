@@ -1,5 +1,9 @@
 package project.app.team7cafe
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -236,6 +240,12 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
             handler.removeCallbacks(runnable)
         }
     }
+
+//    fun notification(){
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            var channel = NotificationChannel("team7", "team7",NotificationManager.IMPORTANCE_HIGH)
+//        }
+//    }
 
 
 }

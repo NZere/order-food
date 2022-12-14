@@ -31,6 +31,7 @@ import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import project.app.team7cafe.Interface.ItemClickListener
 import project.app.team7cafe.Model.Category
+import project.app.team7cafe.Service.ListenOrder
 import project.app.team7cafe.ViewHolder.MenuViewHolder
 import project.app.team7cafe.databinding.ActivityCategoryMenuBinding
 
@@ -131,6 +132,9 @@ class CategoryMenuActivity() : AppCompatActivity() {
 
         loadMenu()
 
+        //Register Service
+        var service:Intent = Intent(this@CategoryMenuActivity, ListenOrder::class.java)
+        startService(service)
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
