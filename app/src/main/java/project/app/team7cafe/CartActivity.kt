@@ -129,6 +129,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                             "here",
                             Toast.LENGTH_SHORT
                         ).show()
+                        var cart = Database(this@CartActivity).carts()
                         order_request =
                             OrderRequest(
                                 user_id,
@@ -136,7 +137,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                                 f_total.toString(),
                                 couponTxt.text.toString(),
                                 "0",
-                                carts,
+                                cart,
                                 time_order
 
                             )
@@ -177,6 +178,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
             users.child(auth.currentUser?.uid!!).get().addOnSuccessListener { it ->
                 if (it.exists()) {
                     table_id = it.child("table_id").value.toString()
+                    var cart = Database(this@CartActivity).carts()
                     order_request =
                         OrderRequest(
                             user_id,
@@ -184,7 +186,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                             txtTotalPrice.text.toString(),
                             couponTxt.text.toString(),
                             "0",
-                            carts,
+                            cart,
                             time_order
                         )
                     var id=System.currentTimeMillis().toString()

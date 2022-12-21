@@ -1,28 +1,24 @@
 package project.app.team7cafe
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.lottie.LottieAnimationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.childEvents
+import com.google.firebase.database.ktx.snapshots
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.count
 import project.app.team7cafe.Model.OrderRequest
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.min
+
 
 class OrderDetailActivity : AppCompatActivity(), Runnable {
 
@@ -37,14 +33,17 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
     lateinit var animationPrepare: LottieAnimationView
     lateinit var animationReady: LottieAnimationView
     lateinit var animationDone: LottieAnimationView
+    lateinit var animationWaiting: LottieAnimationView
     lateinit var txtStatus: TextView
     lateinit var txtTime: TextView
     lateinit var txtTimer: TextView
+    lateinit var txtTimeLayer: TextView
     lateinit var btnFinishedEating: Button
 
     lateinit var handler: Handler
     lateinit var runnable: Runnable
     lateinit var resultDate:Date
+    var queueKeys: MutableList<String> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,10 +52,13 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
         animationPrepare = findViewById(R.id.animationPrepare)
         animationReady = findViewById(R.id.animationPrepared)
         animationDone = findViewById(R.id.animationDone)
+        animationWaiting = findViewById(R.id.animationWaiting)
         btnFinishedEating = findViewById(R.id.btn_finished_eating)
         txtTime = findViewById(R.id.order_time)
         txtTimer = findViewById(R.id.order_timer)
         txtStatus = findViewById(R.id.order_status)
+
+        txtTimeLayer = findViewById(R.id.order_time_layer)
         animationPrepare.setFailureListener {
             animationPrepare.setAnimation("")
             Toast.makeText(
@@ -113,12 +115,26 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                 txtTimer.text = "00:00:00"
 
                 when (order_request_item.status) {
-                    //1- in process 2- gave it to waiter 3- done
+                    // 0- in queue 1- in process 2- gave it to waiter 3- done
+                    "0" -> {
+                        animationDone.visibility = View.GONE
+                        animationPrepare.visibility = View.GONE
+                        animationReady.visibility = View.GONE
+                        animationWaiting.visibility = View.VISIBLE
+                        btnFinishedEating.visibility = View.GONE
+
+                        txtTimer.text="Wait your turn"
+                        var count = countQueue(orderRequestId)
+//                        txtTimeLayer.text="There are $count people before you"
+                        txtTime.text = ""
+                        txtStatus.text = "In queue"
+                    }
 
                     "1" -> {
                         animationDone.visibility = View.GONE
                         animationPrepare.visibility = View.VISIBLE
                         animationReady.visibility = View.GONE
+                        animationWaiting.visibility = View.GONE
                         btnFinishedEating.visibility = View.GONE
 
                         var sdf: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss")
@@ -127,6 +143,7 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                         )
                         txtTime.text = sdf.format(resultDate)
                         txtStatus.text = "In process"
+                        txtTimeLayer.text="Approximate time:"
                         getTargetTime(resultDate)
 
                     }
@@ -135,21 +152,28 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                         animationDone.visibility = View.GONE
                         animationPrepare.visibility = View.GONE
                         animationReady.visibility = View.VISIBLE
+                        animationWaiting.visibility = View.GONE
                         btnFinishedEating.visibility = View.VISIBLE
                         txtTimer.text = "00:00:00"
                         var currentTime = System.currentTimeMillis()
                         var sdf: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss")
                         var resultDate: Date = Date(currentTime + 6 * 60 * 60000) //+utc6
+                        txtTimeLayer.text="Approximate time:"
                         txtTime.text = sdf.format(resultDate)
                         txtStatus.text = "gave it to waiter"
+                        if(order_request_item.table_id=="-100"){
+                            btnFinishedEating.text="Did you take yor order?"
+                        }
 
                     }
                     "3" -> {
                         animationDone.visibility = View.VISIBLE
                         animationPrepare.visibility = View.GONE
                         animationReady.visibility = View.GONE
+                        animationWaiting.visibility = View.GONE
                         btnFinishedEating.visibility = View.GONE
                         txtTimer.text = "00:00:00"
+                        txtTimeLayer.text="Approximate time:"
                         var sdf: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss")
                         var resultDate: Date = Date(
                             (orderRequestId.toLong() + order_request_item.time!!.toInt() * 60000 + 6 * 60 * 60000)
@@ -167,6 +191,31 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
 
         })
 
+    }
+
+    fun countQueue(orderRequestId: String): String {
+        var count=0
+        var count2=0
+        val requests = database.getReference("Request")
+
+        requests.orderByChild("status").equalTo("0").addValueEventListener(object: ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (i in snapshot.children){
+                    if(i.key!! < orderRequestId){
+                        count+=1
+//                        Toast.makeText(this@OrderDetailActivity, snapshot.key, Toast.LENGTH_SHORT).show()
+                    }
+
+                    txtTimeLayer.text="There are $count people before you"
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
+
+        return count.toString()
     }
 
     fun getTargetTime(resultDate: Date) {

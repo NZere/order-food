@@ -47,6 +47,7 @@ class ListenOrder : Service(), ChildEventListener {
     override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
         var request: OrderRequest? = snapshot.getValue(OrderRequest::class.java)
         showNotification(snapshot.key, request)
+
     }
 
     private fun showNotification(key: String?, request: OrderRequest?) {

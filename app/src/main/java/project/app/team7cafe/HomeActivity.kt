@@ -28,7 +28,7 @@ class HomeActivity : AppCompatActivity() {
         }
         takeBtn.setOnClickListener {
             val users = database.getReference("User")
-            users.child(auth.currentUser?.uid!!).child("table_id").setValue(-100)
+            users.child(auth.currentUser?.uid!!).child("table_id").setValue("-100")
             val intent = Intent(this, CategoryMenuActivity::class.java)
             startActivity(intent)
         }

@@ -38,7 +38,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.332"></TextView>
-
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationWaiting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="125dp"
+        android:layout_marginTop="275dp"
+        app:lottie_rawRes="@raw/waiting"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationPrepare"
         android:layout_width="match_parent"
