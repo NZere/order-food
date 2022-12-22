@@ -1,12 +1,13 @@
 package project.app.team7cafe.Service
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.IBinder
+import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
@@ -22,15 +23,15 @@ class ListenOrder : Service(), ChildEventListener {
     var requests: DatabaseReference = database.getReference("Request")
 
 
-    override fun onBind(intent: Intent): IBinder {
-        TODO("Return the communication channel to the service.")
+    override fun onBind(intent: Intent): IBinder? {
+        return null
     }
 
     override fun onCreate() {
         super.onCreate()
         database = FirebaseDatabase.getInstance()
         auth = Firebase.auth
-        requests= database.getReference("Request")
+        requests = database.getReference("Request")
 
     }
 
@@ -46,6 +47,7 @@ class ListenOrder : Service(), ChildEventListener {
 
     override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
         var request: OrderRequest? = snapshot.getValue(OrderRequest::class.java)
+        Toast.makeText(baseContext, snapshot.key.toString(), Toast.LENGTH_LONG).show()
         showNotification(snapshot.key, request)
 
     }
@@ -53,25 +55,51 @@ class ListenOrder : Service(), ChildEventListener {
     private fun showNotification(key: String?, request: OrderRequest?) {
         var intent = Intent(baseContext, OrderDetailActivity::class.java) // change to OrderDetail
         intent.putExtra("OrderRequestId", key.toString()) // change to id
-        var contentIntent = PendingIntent.getActivity(baseContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        var contentIntent = PendingIntent.getActivity(
+            baseContext, 0, intent,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) PendingIntent.FLAG_UPDATE_CURRENT else 0
+        )
 
-        var builder = Notification.Builder(baseContext)
+//        var builder = Notification.Builder(baseContext)
+
+        createNotificationChannel()
+        var builder = NotificationCompat.Builder(baseContext, "CHANNEL ID")
 
         builder.setAutoCancel(true)
             .setDefaults(Notification.DEFAULT_ALL)
             .setWhen(System.currentTimeMillis())
             .setTicker("Cafe Team 7")
             .setContentInfo("Your Order is updated")
-            .setContentText("Order $key was updated status to ${convertCodeToStatus(
-                request!!.status.toString()
-            )}")
+            .setContentText(
+                "Order $key was updated status to ${
+                    convertCodeToStatus(
+                        request!!.status.toString()
+                    )
+                }"
+            )
             .setContentIntent(contentIntent)
             .setContentInfo("Info")
             .setSmallIcon(R.drawable.notification_icon_background)
 
-        var notificationManager:NotificationManager= baseContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(1,builder.build())
+        var notificationManager: NotificationManager =
+            baseContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(1, builder.build())
 
+    }
+
+    fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel
+            val channel_name = "channel_Team_7"
+            val descriptionText = "description"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val mChannel = NotificationChannel("CHANNEL ID", channel_name, importance)
+            mChannel.description = descriptionText
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+        }
     }
 
     override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -106,7 +134,7 @@ class ListenOrder : Service(), ChildEventListener {
 
     fun convertStatusToCode(status: String): String {
         when (status) {
-            "in queue"-> {
+            "in queue" -> {
                 return "0"
             }
             "in process" -> {

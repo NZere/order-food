@@ -22,7 +22,7 @@ class OrderRequest {
         this.table_id = table_id
         this.total = total
         this.coupon = coupon
-        this.status="1" //  1- in process 2- gave it to waiter 3- done
+        this.status=status //  1- in process 2- gave it to waiter 3- done
         this.foods = foods
 
     }
@@ -39,7 +39,7 @@ class OrderRequest {
         this.table_id = table_id
         this.total = total
         this.coupon = coupon
-        this.status="1" // 1- in process 2- gave it to waiter 3- done
+        this.status=status // 1- in process 2- gave it to waiter 3- done
         this.foods = foods
         this.time=time
 

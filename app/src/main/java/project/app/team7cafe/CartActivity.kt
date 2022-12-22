@@ -197,6 +197,7 @@ class CartActivity : AppCompatActivity(), RecyclerItemTouchHelperListener {
                         "Thank you! Your order is being processed",
                         Toast.LENGTH_SHORT
                     ).show()
+                    users.child(auth.currentUser!!.uid).child("has_unordered").setValue(true)
 
                     finish()
                     val intent: Intent = Intent(this@CartActivity, OrderDetailActivity::class.java)

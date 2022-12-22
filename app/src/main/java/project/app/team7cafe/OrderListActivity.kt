@@ -58,7 +58,7 @@ class OrderListActivity : AppCompatActivity() {
 
     private fun loadOrders(uid: String?) {
         val options = FirebaseRecyclerOptions.Builder<OrderRequest>()
-            .setQuery(request, OrderRequest::class.java)
+            .setQuery(request.orderByChild("user_id").equalTo(auth.currentUser!!.uid), OrderRequest::class.java)
             .setLifecycleOwner(this)
             .build()
 

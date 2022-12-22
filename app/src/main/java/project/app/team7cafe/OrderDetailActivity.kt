@@ -42,7 +42,7 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
 
     lateinit var handler: Handler
     lateinit var runnable: Runnable
-    lateinit var resultDate:Date
+    lateinit var resultDate: Date
     var queueKeys: MutableList<String> = ArrayList()
 
 
@@ -123,9 +123,9 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                         animationWaiting.visibility = View.VISIBLE
                         btnFinishedEating.visibility = View.GONE
 
-                        txtTimer.text="Wait your turn"
+                        txtTimer.text = "Wait your turn"
                         var count = countQueue(orderRequestId)
-//                        txtTimeLayer.text="There are $count people before you"
+                        txtTimeLayer.text = "There are $count people before you"
                         txtTime.text = ""
                         txtStatus.text = "In queue"
                     }
@@ -138,12 +138,12 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                         btnFinishedEating.visibility = View.GONE
 
                         var sdf: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss")
-                        resultDate= Date(
+                        resultDate = Date(
                             (orderRequestId.toLong() + order_request_item.time!!.toInt() * 60000 + 6 * 60 * 60000)
                         )
                         txtTime.text = sdf.format(resultDate)
                         txtStatus.text = "In process"
-                        txtTimeLayer.text="Approximate time:"
+                        txtTimeLayer.text = "Approximate time:"
                         getTargetTime(resultDate)
 
                     }
@@ -158,11 +158,11 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                         var currentTime = System.currentTimeMillis()
                         var sdf: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss")
                         var resultDate: Date = Date(currentTime + 6 * 60 * 60000) //+utc6
-                        txtTimeLayer.text="Approximate time:"
+                        txtTimeLayer.text = "Approximate time:"
                         txtTime.text = sdf.format(resultDate)
                         txtStatus.text = "gave it to waiter"
-                        if(order_request_item.table_id=="-100"){
-                            btnFinishedEating.text="Did you take yor order?"
+                        if (order_request_item.table_id == "-100") {
+                            btnFinishedEating.text = "Did you take yor order?"
                         }
 
                     }
@@ -173,7 +173,7 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                         animationWaiting.visibility = View.GONE
                         btnFinishedEating.visibility = View.GONE
                         txtTimer.text = "00:00:00"
-                        txtTimeLayer.text="Approximate time:"
+                        txtTimeLayer.text = "Approximate time:"
                         var sdf: SimpleDateFormat = SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss")
                         var resultDate: Date = Date(
                             (orderRequestId.toLong() + order_request_item.time!!.toInt() * 60000 + 6 * 60 * 60000)
@@ -194,26 +194,28 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
     }
 
     fun countQueue(orderRequestId: String): String {
-        var count=0
-        var count2=0
+        var count = 0
+        var count2 = 0
         val requests = database.getReference("Request")
 
-        requests.orderByChild("status").equalTo("0").addValueEventListener(object: ValueEventListener {
+        requests.orderByChild("status").equalTo("0")
+            .addValueEventListener(object : ValueEventListener {
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (i in snapshot.children){
-                    if(i.key!! < orderRequestId){
-                        count+=1
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (i in snapshot.children) {
+                        if (i.key!! < orderRequestId) {
+                            count += 1
 //                        Toast.makeText(this@OrderDetailActivity, snapshot.key, Toast.LENGTH_SHORT).show()
+                        }
+                        txtTimeLayer.text="There are $count people before you"
+
                     }
-
-                    txtTimeLayer.text="There are $count people before you"
                 }
-            }
-            override fun onCancelled(error: DatabaseError) {
-            }
 
-        })
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            })
 
         return count.toString()
     }
@@ -235,7 +237,7 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                     var minutes = diff / (60 * 1000)
                     diff -= minutes * (60 * 1000)
                     var seconds = diff / 1000
-                    diff -= seconds*1000
+                    diff -= seconds * 1000
                     var millisec = diff
 
                     txtTimer.text = "$hours h $minutes min $seconds s"
@@ -245,9 +247,9 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                 txtTimer.text = "00:00:01"
             }
         }
-        handler.postDelayed(runnable,1*10)
+        handler.postDelayed(runnable, 1 * 10)
 
-        if (txtStatus.text !="In process"){
+        if (txtStatus.text != "In process") {
             txtTimer.text = "00:00:01"
             handler.removeCallbacks(runnable)
         }
@@ -272,7 +274,7 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                     var minutes = diff / (60 * 1000)
                     diff -= minutes * (60 * 1000)
                     var seconds = diff / 1000
-                    diff -= seconds*1000
+                    diff -= seconds * 1000
                     var millisec = diff
 
                     txtTimer.text = "$hours h $minutes min $seconds s"
@@ -282,9 +284,9 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
                 txtTimer.text = "00:00:01"
             }
         }
-        handler.postDelayed(runnable,1*10)
+        handler.postDelayed(runnable, 1 * 10)
 
-        if (txtStatus.text !="In process"){
+        if (txtStatus.text != "In process") {
             txtTimer.text = "00:00:01"
             handler.removeCallbacks(runnable)
         }

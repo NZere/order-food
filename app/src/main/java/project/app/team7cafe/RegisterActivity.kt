@@ -97,7 +97,16 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, "Authentication successfully.",
                         Toast.LENGTH_SHORT).show()
 
-                    users.child(auth.currentUser?.uid!!).child("MyCoupons").child(hashMap["order_id"].toString()).setValue(hashMap)
+                    val coupons = database.getReference("Coupon")
+                    var newCoupons: HashMap<String, Any?> = HashMap()
+                    newCoupons["discount"]= "10"
+                    newCoupons["is_actual"]=true
+                    newCoupons["name"]="Discount for first order"
+                    newCoupons["user_id"]= auth.currentUser?.uid
+
+
+                    coupons.child(auth.currentUser!!.uid+"1111").setValue(newCoupons)
+//                    users.child(auth.currentUser?.uid!!).child("MyCoupons").child(hashMap["order_id"].toString()).setValue(hashMap)
 
                     // Sign in success, go to HomeActivity
                     val intent = Intent(this, HomeActivity::class.java)
