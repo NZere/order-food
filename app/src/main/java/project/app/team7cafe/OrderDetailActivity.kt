@@ -202,6 +202,7 @@ class OrderDetailActivity : AppCompatActivity(), Runnable {
             .addValueEventListener(object : ValueEventListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    count=0
                     for (i in snapshot.children) {
                         if (i.key!! < orderRequestId) {
                             count += 1

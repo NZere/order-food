@@ -90,13 +90,6 @@ class FoodListActivity : AppCompatActivity() {
                     var clickItem: Food = model
                     holder.setItemClickListener(object : ItemClickListener {
                         override fun onClick(view: View, position: Int, isLongClick: Boolean) {
-
-                            Toast.makeText(
-                                baseContext,
-                                ""+ adapter.getRef(position).key,
-                                Toast.LENGTH_SHORT
-                            ).show()
-
                             val intent:Intent = Intent(this@FoodListActivity, FoodDetailActivity::class.java)
                             intent.putExtra("FoodId", adapter.getRef(position).key)
                             startActivity(intent)

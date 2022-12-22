@@ -136,6 +136,8 @@ class CategoryMenuActivity() : AppCompatActivity() {
         var service:Intent = Intent(this@CategoryMenuActivity, ListenOrder::class.java)
         startService(service)
 
+
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
@@ -171,7 +173,7 @@ class CategoryMenuActivity() : AppCompatActivity() {
                             intent.putExtra("CategoryId", adapter.getRef(position).key)
                             startActivity(intent)
 
-                            Toast.makeText(baseContext,""+adapter.getRef(position).key,Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(baseContext,""+adapter.getRef(position).key,Toast.LENGTH_SHORT).show()
                         }
                     }
                     )
